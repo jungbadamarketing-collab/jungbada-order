@@ -138,11 +138,6 @@ select:focus{border-color:#999}
   <!-- 설정 탭 -->
   <div id="tab-settings" class="tab-content">
     <div class="setting-block">
-      <h3>Apps Script URL</h3>
-      <input class="apps-input" id="appsUrl" placeholder="https://script.google.com/macros/s/..." oninput="saveSettings()">
-      <div class="hint">웹앱 배포 후 URL 여기에 붙여넣기</div>
-    </div>
-    <div class="setting-block">
       <h3>업체 관리</h3>
       <div class="vendor-list" id="vendorList"></div>
       <div class="add-row" style="border-top:none;padding-top:10px;margin-top:6px">
@@ -189,7 +184,7 @@ const DEFAULT_DATA = {
     {name:'수산업체',sms:true},{name:'국내주류업체',sms:true},{name:'수입주류업체',sms:true},
     {name:'포장재업체',sms:true},{name:'기타',sms:false}
   ],
-  appsUrl:'',
+  appsUrl:'https://script.google.com/macros/s/AKfycby3iwmKyWA477YG5S1MjO3XityeSC6n8HsgdGAp7N1d5yKKLOpof9mm_rQ_vaU3VDJr/exec',
   categories:[
     {id:'seafood',name:'수산',type:'daily',open:true,items:[
       {id:'s1',name:'광어',vendor:'수산업체',unit:'마리',cycle:1,lastOrder:null,orders:[],qty:0},
@@ -472,8 +467,7 @@ function renderVendorSettings() {
       <button class="sms-toggle ${v.sms?'on':''}" onclick="toggleVendorSms(${i})">${v.sms?'문자 O':'문자 X'}</button>
       <span class="del-btn" onclick="deleteVendor(${i})">🗑</span>
     </div>`).join('');
-  const urlEl = document.getElementById('appsUrl');
-  if(urlEl) urlEl.value = state.appsUrl || '';
+
 }
 
 function updateSummary() {
@@ -584,8 +578,6 @@ function toggleVendorSms(idx) {
 }
 
 function saveSettings() {
-  const url = document.getElementById('appsUrl');
-  if(url) state.appsUrl = url.value.trim();
   save(); showSaveNotice();
 }
 
