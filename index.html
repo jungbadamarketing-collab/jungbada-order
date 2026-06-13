@@ -578,47 +578,43 @@ function loadState(){
 // 서버에서 최신 데이터 불러와서 병합
 async function syncFromServer(){
   try {
+    showSyncNotice('☁️ 서버에서 데이터 불러오는 중...');
     const res = await fetch(GAS_URL + '?action=loadAppData');
     const json = await res.json();
-    if(!json.data) return;
-    const serverData = json.data;
-    const serverTime = json.updatedAt ? new Date(json.updatedAt) : null;
 
-    // localStorage 데이터가 없거나 서버가 더 최신이면 서버 데이터 사용
-    const localRaw = localStorage.getItem('jungbada_order_v4');
-    if(!localRaw){
-      state = migrateState({ ...DEFAULT_DATA, ...serverData });
-      localStorage.setItem('jungbada_order_v4', JSON.stringify(state));
-      renderTabs(); renderContent();
-      showSyncNotice('☁️ 서버에서 데이터를 불러왔습니다');
+    if(!json.data){
+      // 서버에 데이터 없음 → 현재 로컬 데이터를 서버에 저장
+      showSyncNotice('📤 서버에 초기 데이터 저장 중...');
+      await saveToServer();
+      showSyncNotice('✅ 초기 동기화 완료');
       return;
     }
 
-    // 서버와 로컬 중 어느 게 더 최신인지 확인
-    const localTime = localStorage.getItem('jungbada_order_v4_time');
-    const localTimeDate = localTime ? new Date(localTime) : null;
+    // 서버 데이터로 덮어쓰기 (항상 서버 우선)
+    // 단, 오늘 입력한 수량(발주 전)은 로컬 유지
+    const serverData = json.data;
+    const qtyMap = {};
+    state.categories.forEach(cat=>{
+      cat.items.forEach(item=>{ if(item.qty>0) qtyMap[item.id]=item.qty; });
+    });
 
-    if(serverTime && (!localTimeDate || serverTime > localTimeDate)){
-      // 서버가 더 최신 → 서버로 덮어쓰기 (단, 수량은 로컬 유지)
-      const localState = JSON.parse(localRaw);
-      const qtyMap = {};
-      localState.categories.forEach(cat=>{
-        cat.items.forEach(item=>{ if(item.qty>0) qtyMap[item.id]=item.qty; });
-      });
-      state = migrateState({ ...localState, ...serverData,
-        categories: serverData.categories.map(cat=>({
-          ...cat,
-          items: cat.items.map(item=>({
-            ...item,
-            qty: qtyMap[item.id] || 0
-          }))
-        }))
-      });
-      localStorage.setItem('jungbada_order_v4', JSON.stringify(state));
-      renderTabs(); renderContent();
-      showSyncNotice('☁️ 최신 데이터로 업데이트됐습니다');
-    }
-  } catch(e) {}
+    state.categories = serverData.categories.map(cat=>({
+      ...cat,
+      open: (state.categories.find(c=>c.id===cat.id)||cat).open,
+      items: cat.items.map(item=>({
+        ...item,
+        qty: qtyMap[item.id] || 0
+      }))
+    }));
+    state.vendors = serverData.vendors || state.vendors;
+
+    localStorage.setItem('jungbada_order_v4', JSON.stringify(state));
+    renderTabs();
+    renderContent();
+    showSyncNotice('✅ 동기화 완료');
+  } catch(e) {
+    showSyncNotice('⚠️ 서버 연결 실패 (로컬 데이터 사용 중)');
+  }
 }
 
 function showSyncNotice(msg){
@@ -633,17 +629,30 @@ function save(){
   localStorage.setItem('jungbada_order_v4',JSON.stringify(state));
   localStorage.setItem('jungbada_order_v4_time', new Date().toISOString());
   clearTimeout(save._t);
-  save._t = setTimeout(saveToServer, 1500);
+  save._t = setTimeout(saveToServer, 800);
+}
+
+// 즉시 서버 저장 (순서변경, 품목추가/삭제 등 구조 변경 시)
+function saveNow(){
+  localStorage.setItem('jungbada_order_v4',JSON.stringify(state));
+  localStorage.setItem('jungbada_order_v4_time', new Date().toISOString());
+  clearTimeout(save._t);
+  saveToServer();
 }
 
 // 서버(Apps Script)에 앱 데이터 저장
 async function saveToServer(){
   try {
     const payload = { categories: state.categories, vendors: state.vendors };
-    await fetch(GAS_URL + '?action=saveAppData', {
+    const res = await fetch(GAS_URL + '?action=saveAppData', {
       method: 'POST',
       body: JSON.stringify(payload)
     });
+    const data = await res.json();
+    if(data.success){
+      // 서버 저장 성공 시 로컬 타임스탬프를 서버 시간으로 업데이트
+      if(data.updatedAt) localStorage.setItem('jungbada_order_v4_time', data.updatedAt);
+    }
   } catch(e) {}
 }
 function saveDraft(){
@@ -904,8 +913,11 @@ async function handleImgUpload(itemId,input){
           const item=cat.items.find(i=>i.id===itemId);
           if(item){ item.imageUrl=data.url; }
         });
-        save();
-        showSyncNotice('✅ 사진 업로드 완료');
+        // 즉시 서버에 저장 (1.5초 기다리지 않고)
+        localStorage.setItem('jungbada_order_v4', JSON.stringify(state));
+        localStorage.setItem('jungbada_order_v4_time', new Date().toISOString());
+        await saveToServer();
+        showSyncNotice('✅ 사진 업로드 완료 - 다른 기기에서도 볼 수 있어요');
       }
     } catch(err){ showSyncNotice('⚠️ 사진 서버 업로드 실패 (로컬에는 저장됨)'); }
   };
@@ -1031,7 +1043,7 @@ function confirmMoveCat(toCatId){
   if(idx===-1) return;
   const [item]=fromCat.items.splice(idx,1);
   toCat.items.push(item);
-  save();
+  saveNow();
   closeModal('moveCatModal');
   rerenderCurrentTab(catId);
 }
@@ -1056,7 +1068,7 @@ function confirmMoveSection(zoneId){
   // 새 zone에 추가
   const zone=INGREDIENT_ZONES.find(z=>z.id===zoneId);
   if(zone) zone.items.push(itemId);
-  save();
+  saveNow();
   closeModal('moveSectionModal');
   rerenderCurrentTab('ingredient');
 }
@@ -1091,7 +1103,7 @@ function moveItem(catId, itemId, dir){
   const ni=idx+dir;
   if(ni<0||ni>=cat.items.length) return;
   [cat.items[idx],cat.items[ni]]=[cat.items[ni],cat.items[idx]];
-  save();rerenderCurrentTab(catId);
+  saveNow();rerenderCurrentTab(catId);
 }
 
 function toggleAutoOrder(catId, itemId){
@@ -1155,7 +1167,7 @@ function confirmAddItem(){
     const zone=INGREDIENT_ZONES.find(z=>z.id===addModalZoneId);
     if(zone) zone.items.push(newItem.id);
   }
-  save();closeModal('addItemModal');rerenderCurrentTab(addModalCatId);
+  saveNow();closeModal('addItemModal');rerenderCurrentTab(addModalCatId);
 }
 
 // ── 삭제 ──
@@ -1168,7 +1180,7 @@ function askDelete(catId, itemId){
 function confirmDelete(){
   const cat=state.categories.find(c=>c.id===pendingDel.cat);
   if(cat) cat.items=cat.items.filter(i=>i.id!==pendingDel.item);
-  save();closeModal('deleteModal');rerenderCurrentTab(pendingDel.cat);
+  saveNow();closeModal('deleteModal');rerenderCurrentTab(pendingDel.cat);
 }
 
 // ── 업체 관리 ──
@@ -1230,6 +1242,7 @@ function saveVendor(idx){
   state.vendors[idx].suffix=document.getElementById('vSuffix_'+idx)?.value||'';
   save();
   document.getElementById('tab_settings').innerHTML=renderSettingsHTML();
+  saveNow();
 }
 function askVendorDelete(idx){
   pendingVendorDel=idx;
