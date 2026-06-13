@@ -24,6 +24,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue','Apple SD Got
 .tab-bar::-webkit-scrollbar{display:none}
 .tab-btn{flex-shrink:0;font-size:14px;font-weight:600;padding:9px 14px;border:none;background:transparent;color:#aaa;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;font-family:inherit}
 .tab-btn.active{color:#1a1a1a;border-bottom-color:#1a1a1a}
+.tab-btn.group-tab{font-weight:800;color:#555;font-size:13px;padding:9px 12px;background:transparent;position:relative}
+.tab-btn.group-tab.active{color:#1a1a1a;border-bottom-color:#1a1a1a}
+.tab-btn.group-tab .arrow{font-size:9px;margin-left:3px;transition:transform 0.2s}
+.tab-btn.group-tab.open .arrow{transform:rotate(180deg)}
+/* 드롭다운 팝업 */
+.group-dropdown{position:absolute;top:100%;left:0;background:#fff;border:1.5px solid #e8e8e5;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,0.12);z-index:200;min-width:200px;padding:6px;display:none}
+.group-dropdown.show{display:block}
+.group-dropdown-item{display:block;width:100%;padding:10px 14px;font-size:14px;font-weight:600;text-align:left;background:none;border:none;cursor:pointer;border-radius:8px;font-family:inherit;color:#555;white-space:nowrap}
+.group-dropdown-item:hover{background:#f5f5f3;color:#1a1a1a}
+.group-dropdown-item.active{background:#1a1a1a;color:#fff}
+/* 탭바 position relative for dropdown */
+.tab-bar{position:relative}
 .content{padding:14px;padding-bottom:100px}
 .tab-content{display:none}
 .tab-content.active{display:block}
@@ -48,7 +60,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue','Apple SD Got
 .auto-badge{position:absolute;top:7px;left:7px;z-index:5;font-size:10px;font-weight:700;padding:3px 7px;border-radius:20px;background:#3b82f6;color:#fff;display:none}
 .auto-badge.show{display:block}
 .card-img{width:100%;aspect-ratio:1;background:#f7f7f5;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:12px 12px 0 0;cursor:pointer;position:relative}
-.card-img img{width:100%;height:100%;object-fit:cover}
+.card-img img{width:100%;height:100%;object-fit:cover;border-bottom:1px solid #e8e8e5;}
 .card-img-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:100%;height:100%}
 .card-img-placeholder .emoji{font-size:28px;opacity:0.25}
 .card-img-placeholder .edit-hint{font-size:11px;color:#ccc;font-weight:500}
@@ -176,6 +188,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue','Apple SD Got
 .btn-order.ready{background:#1a1a1a}
 @keyframes pulse-highlight{0%{box-shadow:0 0 0 0 rgba(245,158,11,0.4)}70%{box-shadow:0 0 0 8px rgba(245,158,11,0)}100%{box-shadow:0 0 0 0 rgba(245,158,11,0)}}
 .item-card.highlighted{animation:pulse-highlight 1s ease-out}
+/* 평균 발주량 힌트 */
+.avg-hint{font-size:10px;color:#bbb;text-align:center;margin-top:3px;font-weight:600}
+/* 수량 입력 placeholder 스타일 */
+.step-val-input::placeholder{color:#ccc;font-weight:600}
+.step-val-input::-webkit-inner-spin-button,.step-val-input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 </style>
 </head>
 <body>
@@ -206,17 +223,45 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue','Apple SD Got
 <div class="modal-bg" id="moveSectionModal"><div class="modal"><div class="modal-handle"></div><h3>섹션 이동</h3><p style="font-size:13px;color:#888;margin-bottom:12px" id="moveSectionItemName"></p><div id="moveSectionList"></div><div class="modal-actions"><button class="modal-btn" onclick="closeModal('moveSectionModal')">취소</button></div></div></div>
 
 <script>
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbyoA1d2n7nzCBh0_Jd3b5LRaYsIQ-pWWaqlYtVa66xOiEpSPRlHLc1eErEP2TLeRPPz/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzmdAm9Yeo0Ao8G2NJZjCahoOUw11PIpnROWHQHz3mf1FYUuKKBKNRjJUXJ4dgjNcVe/exec';
 const UNITS = ['개','봉','병','단','망','kg','g','박스','팩','판','통','장','묶음','포','마리'];
-const INGREDIENT_ZONES = [
-  {id:'z_freezer',name:'❄️ 냉동고',items:['i1','i2','i3','i4','i5','i6','i7','i8','i9','i10']},
-  {id:'z_oroshi',name:'🔪 오로시',items:['i11','i12','i13','i14','i16','i17','i18','i19']},
-  {id:'z_aging',name:'🧊 숙성고',items:['i15','i20','i21']},
-  {id:'z_pantry',name:'🫙 간택기',items:['i22','i23','i24','i25','i26','i27','i28','i29']},
-  {id:'z_vegfridge',name:'🥬 야채냉',items:['i30','i31','i32','i33','i34','i35','i36','i37','i38','i39']},
-  {id:'z_shelf',name:'📦 앵글',items:['i40','i41','i42','i43','i44','i45']},
-  {id:'z_showcase',name:'🍱 쇼케이스',items:['i46','i47','i48','i49','i50','i51','i52','i53','i54']},
+// ── 대카테고리 그룹 (주방/홀) ──
+const GROUP_STRUCTURE = [
+  {id:'kitchen', label:'🍳 주방', cats:['aquarium','pantry_freezer_oroshi','shelf_pkg_aging']},
+  {id:'hall',    label:'🏮 홀',  cats:['hall_cold_showcase_pkg','hall_shelves','alcohol_beverage']},
 ];
+// 그룹에 속하지 않는 단독 탭
+const SOLO_CATS = ['welfare','settings']; // 기타는 홀 주류/음료/기타 안으로
+
+// ── 카테고리별 섹션 정의 ──
+const CAT_ZONES = {
+  pantry_freezer_oroshi: [
+    {id:'z_pantry',  name:'🫙 간택기', items:['i22','i23','i24','i25','i26','i27','i28','i29']},
+    {id:'z_freezer', name:'❄️ 냉동고', items:['i1','i2','i3','i4','i5','i6','i7','i8','i9','i10']},
+    {id:'z_oroshi',  name:'🔪 오로시', items:['i11','i12','i13','i14','i16','i17','i18','i19']},
+  ],
+  shelf_pkg_aging: [
+    {id:'z_shelf_top',name:'📦 상부장',  items:[]},
+    {id:'z_pkg',      name:'🗃 포장재',  items:['p1','p2','p3','p4','p5','p6','p7','p8','p9','p10','p11','p12','p13']},
+    {id:'z_aging',    name:'🧊 숙성고',  items:['i15','i20','i21']},
+  ],
+  hall_cold_showcase_pkg: [
+    {id:'z_vegfridge',name:'🧊 주류냉',  items:['i30','i31','i32','i33','i34','i35','i36','i37','i38','i39']},
+    {id:'z_showcase', name:'🍱 쇼케이스',items:['i40','i41','i42','i43','i44','i45','i46','i47','i48','i49','i50','i51','i52','i53','i54']},
+    {id:'z_hall_pkg', name:'📦 홀포장재',items:[]},
+  ],
+  hall_shelves: [
+    {id:'z_hall_top', name:'📦 홀상부장', items:[]},
+    {id:'z_hall_bot', name:'🗄 홀하부장', items:[]},
+  ],
+  alcohol_beverage: [
+    {id:'z_alcohol',  name:'🍺 주류', items:['d1','d2','d3','d4','d5','d6','d7','d8','d9','d10','d11','d12','d13','im1','im2','im3','im4','im5','im6','im7','im8','im9']},
+    {id:'z_beverage', name:'🥤 음료', items:['o5','o6','o7']},
+    {id:'z_etc',      name:'🧹 기타', items:['o1','o2','o3','o4']},
+  ],
+};
+// 기존 호환용
+const INGREDIENT_ZONES = Object.values(CAT_ZONES).flat();
 const DEFAULT_DATA = {
   managers:{phone1:'',phone1name:'관리자1',phone2:'',phone2name:'관리자2'},
   vendors:[
@@ -230,7 +275,7 @@ const DEFAULT_DATA = {
     {name:'기타',sms:false,contact:'',link:'',vid:'',pw:'',suffix:''},
   ],
   categories:[
-    {id:'seafood',name:'수산',emoji:'🐟',items:[
+    {id:'aquarium',name:'수족관',emoji:'🐠',items:[
       {id:'s1',name:'밀치',vendor:'수산업체',unit:'kg',cycle:1,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
       {id:'s2',name:'국산도미',vendor:'수산업체',unit:'마리',cycle:2,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
       {id:'s3',name:'멍게',vendor:'수산업체',unit:'kg',cycle:2,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
@@ -246,7 +291,7 @@ const DEFAULT_DATA = {
       {id:'s13',name:'개불',vendor:'수산업체',unit:'kg',cycle:4,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
       {id:'s14',name:'참돔',vendor:'수산업체',unit:'마리',cycle:3,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
     ]},
-    {id:'ingredient',name:'식자재',emoji:'🥬',items:[
+    {id:'pantry_freezer_oroshi',name:'간택기/냉동고/오로시',emoji:'🥬',items:[
       {id:'i1',name:'노바시 40미',vendor:'식자재업체',unit:'개',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
       {id:'i2',name:'홍합 1kg',vendor:'식자재업체',unit:'봉',cycle:7,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
       {id:'i3',name:'오징어 다이스',vendor:'식자재업체',unit:'봉',cycle:10,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
@@ -302,7 +347,7 @@ const DEFAULT_DATA = {
       {id:'i53',name:'단무지 2kg',vendor:'식자재업체',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
       {id:'i54',name:'니비시 간장 1.5L',vendor:'식자재업체',unit:'병',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
     ]},
-    {id:'packaging',name:'포장재',emoji:'📦',items:[
+    {id:'shelf_pkg_aging',name:'상부장/포장재/숙성고',emoji:'🗃',items:[
       {id:'p1',name:'회 용기/뚜껑',vendor:'포장재업체',unit:'봉',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
       {id:'p2',name:'기본찬 용기/뚜껑',vendor:'포장재업체',unit:'봉',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
       {id:'p3',name:'튀김/전 일체형',vendor:'포장재업체',unit:'봉',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
@@ -317,7 +362,7 @@ const DEFAULT_DATA = {
       {id:'p12',name:'냅킨',vendor:'포장재업체',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
       {id:'p13',name:'랩 350mm',vendor:'쿠팡',unit:'개',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
     ]},
-    {id:'alcohol',name:'주류',emoji:'🍺',items:[
+    {id:'alcohol_beverage',name:'주류/음료/기타',emoji:'🍺',items:[
       {id:'d1',name:'카스',vendor:'국내주류업체',unit:'박스',cycle:7,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
       {id:'d2',name:'테라',vendor:'국내주류업체',unit:'박스',cycle:7,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
       {id:'d3',name:'진로',vendor:'국내주류업체',unit:'박스',cycle:7,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
@@ -344,6 +389,8 @@ const DEFAULT_DATA = {
       {id:'o6',name:'스프라이트',vendor:'국내주류업체',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
       {id:'o7',name:'코카콜라',vendor:'국내주류업체',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
     ]},
+    {id:'hall_cold_showcase_pkg',name:'주류냉/쇼케이스/포장재',emoji:'🏮',items:[]},
+    {id:'hall_shelves',name:'홀상부장/홀하부장',emoji:'🗄',items:[]},
     {id:'etc',name:'기타',emoji:'🧹',items:[
       {id:'o1',name:'가루세제',vendor:'쿠팡',unit:'개',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
       {id:'o2',name:'퐁퐁',vendor:'식자재업체',unit:'개',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
@@ -390,6 +437,7 @@ function resizeImage(file,maxSize){
 
 // ── 번역 캐시 ──
 let translationsCache = {};
+let orderAvgCache = {}; // 품목명 -> 평균발주량
 async function loadTranslations(){
   try{
     const res=await fetch(GAS_URL+'?action=loadTranslations');
@@ -397,11 +445,22 @@ async function loadTranslations(){
     if(data.data) translationsCache=data.data;
   }catch(e){}
 }
+async function loadOrderAvg(){
+  try{
+    const res=await fetch(GAS_URL+'?action=loadOrderAvg');
+    const data=await res.json();
+    if(data.data) orderAvgCache=data.data;
+  }catch(e){}
+}
+function getOrderAvg(itemName){
+  return orderAvgCache[itemName]||null;
+}
 function getTranslation(itemId){return translationsCache[itemId]||null;}
 
 // ── 상태 관리 ──
 let state=loadState();
-let activeCat=state.categories[0].id;
+let activeCat=state.categories.find(c=>c.id==='aquarium')?.id||state.categories[0].id;
+let openGroups=new Set(['kitchen']); // 처음엔 주방 열려있게
 let pendingDel={cat:null,item:null};
 let pendingVendorDel=null;
 let pendingSmsToggle={idx:null};
@@ -434,6 +493,29 @@ function migrateState(p){
   const alcIdx=cats.findIndex(c=>c.id==='alcohol');
   if(pkgIdx>alcIdx&&pkgIdx!==-1&&alcIdx!==-1){const[pkg]=cats.splice(pkgIdx,1);cats.splice(alcIdx,0,pkg);}
   if(!p.categories.find(c=>c.id==='welfare'))p.categories.push(DEFAULT_DATA.categories.find(c=>c.id==='welfare'));
+  // 기존 카테고리 ID 마이그레이션
+  p.categories.forEach(cat=>{
+    if(cat.id==='seafood'){cat.id='aquarium';cat.name='수족관';cat.emoji='🐠';}
+    if(cat.id==='ingredient'){cat.id='pantry_freezer_oroshi';cat.name='간택기/냉동고/오로시';cat.emoji='🥬';}
+    if(cat.id==='packaging'){cat.id='shelf_pkg_aging';cat.name='상부장/포장재/숙성고';cat.emoji='🗃';}
+    if(cat.id==='alcohol'){cat.id='alcohol_beverage';cat.name='주류/음료';cat.emoji='🍺';}
+  });
+  // 새 홀 카테고리 추가
+  if(!p.categories.find(c=>c.id==='hall_cold_showcase_pkg'))
+    p.categories.splice(p.categories.findIndex(c=>c.id==='alcohol_beverage')||p.categories.length-2,0,{id:'hall_cold_showcase_pkg',name:'주류냉/쇼케이스/포장재',emoji:'🏮',items:[]});
+  if(!p.categories.find(c=>c.id==='hall_shelves'))
+    p.categories.splice(p.categories.findIndex(c=>c.id==='hall_cold_showcase_pkg')+1,0,{id:'hall_shelves',name:'홀상부장/홀하부장',emoji:'🗄',items:[]});
+  // 기타 카테고리를 alcohol_beverage로 통합
+  const etcCat=p.categories.find(c=>c.id==='etc');
+  const alcCat=p.categories.find(c=>c.id==='alcohol_beverage');
+  if(etcCat&&alcCat&&etcCat.items.length>0){
+    etcCat.items.forEach(item=>{if(!alcCat.items.find(i=>i.id===item.id))alcCat.items.push(item);});
+    etcCat.items=[];
+  }
+  // alcohol_beverage 이름 업데이트
+  if(alcCat&&alcCat.name==='주류/음료') alcCat.name='주류/음료/기타';
+  // etc 카테고리 제거 (통합됐으니)
+  p.categories=p.categories.filter(c=>c.id!=='etc');
   return p;
 }
 function loadState(){
@@ -514,15 +596,55 @@ function saveDraft(){
 function today(){return new Date().toISOString().slice(0,10)}
 function daysSince(d){if(!d)return null;return Math.floor((new Date(today())-new Date(d))/864e5)}
 function getSuggest(item,catId){
-  if(catId==='seafood'){const ds=daysSince(item.lastOrder);if(ds===null)return{type:'today',label:'첫 발주'};if(ds>=1)return{type:'today',label:'오늘'};return{type:'ok',label:'D-1'};}
+  if(catId==='seafood'||catId==='aquarium'){const ds=daysSince(item.lastOrder);if(ds===null)return{type:'today',label:'첫 발주'};if(ds>=1)return{type:'today',label:'오늘'};return{type:'ok',label:'D-1'};}
   const ds=daysSince(item.lastOrder);if(ds===null)return{type:'today',label:'첫 발주'};
   const rem=item.cycle-ds;if(rem<=0)return{type:'today',label:'오늘'};if(rem<=3)return{type:'soon',label:'D-'+rem};return{type:'ok',label:'D-'+rem};
 }
 
 function renderTabs(){
   const bar=document.getElementById('tabBar');
-  const tabs=[...state.categories,{id:'settings',name:'설정',emoji:'⚙️'}];
-  bar.innerHTML=tabs.map(c=>`<button class="tab-btn ${c.id===activeCat?'active':''}" onclick="switchTab('${c.id}')">${c.emoji||''} ${c.name}</button>`).join('');
+  // 기존 드롭다운 닫기
+  document.querySelectorAll('.group-dropdown').forEach(d=>d.remove());
+
+  const catMap={};
+  state.categories.forEach(c=>{catMap[c.id]=c;});
+  let html='';
+
+  // 대카테고리 그룹 (주방/홀) - 드롭다운 버튼
+  GROUP_STRUCTURE.forEach(group=>{
+    const groupActive=group.cats.includes(activeCat);
+    const isOpen=openGroups.has(group.id);
+    html+=`<button class="tab-btn group-tab ${groupActive?'active':''} ${isOpen?'open':''}" onclick="toggleGroup(event,'${group.id}')">${group.label} <span class="arrow">▾</span></button>`;
+  });
+
+  // 단독 탭 (복지/설정) - SOLO_CATS에 있는 것만
+  state.categories.filter(c=>SOLO_CATS.includes(c.id)).forEach(c=>{
+    html+=`<button class="tab-btn ${c.id===activeCat?'active':''}" onclick="switchTab('${c.id}')">${c.emoji||''} ${c.name}</button>`;
+  });
+  html+=`<button class="tab-btn ${activeCat==='settings'?'active':''}" onclick="switchTab('settings')">⚙️ 설정</button>`;
+  bar.innerHTML=html;
+
+  // 열린 그룹 드롭다운 생성
+  GROUP_STRUCTURE.forEach(group=>{
+    if(!openGroups.has(group.id)) return;
+    const btn=bar.querySelector(`button[onclick*="'${group.id}'"]`);
+    if(!btn) return;
+    const dd=document.createElement('div');
+    dd.className='group-dropdown show';
+    dd.id='dropdown_'+group.id;
+    group.cats.forEach(catId=>{
+      const c=catMap[catId];
+      if(!c) return;
+      const item=document.createElement('button');
+      item.className='group-dropdown-item'+(catId===activeCat?' active':'');
+      item.textContent=(c.emoji||'')+' '+c.name;
+      item.onclick=(e)=>{e.stopPropagation();switchTab(catId);openGroups.delete(group.id);renderTabs();};
+      dd.appendChild(item);
+    });
+    dd.addEventListener('click',e=>e.stopPropagation());
+    btn.style.position='relative';
+    btn.appendChild(dd);
+  });
 }
 
 function renderContent(){
@@ -534,10 +656,11 @@ function renderContent(){
     div.id='tab_'+cat.id;
     const activeItems=cat.items.filter(i=>!i.inactive);
     const inactiveItems=cat.items.filter(i=>i.inactive);
-    if(cat.id==='ingredient'){
-      const zoneMap={};INGREDIENT_ZONES.forEach(z=>{zoneMap[z.id]=[];});const unzoned=[];
-      activeItems.forEach(item=>{let placed=false;for(const z of INGREDIENT_ZONES){if(z.items.includes(item.id)){zoneMap[z.id].push(item);placed=true;break}}if(!placed)unzoned.push(item);});
-      INGREDIENT_ZONES.forEach(zone=>{const zi=zoneMap[zone.id];if(!zi.length)return;div.appendChild(buildZoneSection(cat.id,zone.id,zone.name,zi,true));});
+    const catZones=CAT_ZONES[cat.id];
+    if(catZones&&catZones.length>0){
+      const zoneMap={};catZones.forEach(z=>{zoneMap[z.id]=[];});const unzoned=[];
+      activeItems.forEach(item=>{let placed=false;for(const z of catZones){if(z.items.includes(item.id)){zoneMap[z.id].push(item);placed=true;break}}if(!placed)unzoned.push(item);});
+      catZones.forEach(zone=>{const zi=zoneMap[zone.id]||[];div.appendChild(buildZoneSection(cat.id,zone.id,zone.name,zi,true));});
       if(unzoned.length>0)div.appendChild(buildZoneSection(cat.id,'z_extra','📌 기타',unzoned,true));
     }else{
       const grid=document.createElement('div');grid.className='card-grid';
@@ -611,12 +734,15 @@ function createItemCard(catId,item,idx,total,isInactive=false){
       <div class="card-edit-row"><span class="card-vendor-unit-text" id="vendorUnit_${item.id}" onclick="toggleInlineEdit(event,'${catId}','${item.id}')">${item.vendor} · ${item.unit}</span></div>
       ${!isInactive?`<div class="stepper">
         <button class="step-btn minus" onclick="stepQty('${catId}','${item.id}',-1)">−</button>
-        <input type="number" inputmode="numeric" class="${valClass}" id="val_${item.id}" value="${displayQty}" min="0"
+        <input type="number" inputmode="numeric" id="val_${item.id}" value="${displayQty||''}" min="0"
+          placeholder="${getOrderAvg(item.name)||''}"
           onchange="setQtyDirect('${catId}','${item.id}',this.value)"
           onfocus="this.select()"
-          style="width:44px;border:${displayQty>0?(item.autoOrder?'1.5px solid #3b82f6':'1.5px solid #16a34a'):'1.5px dashed #e0e0e0'};background:${displayQty>0?(item.autoOrder?'#eff6ff':'#f0fdf4'):'transparent'};color:${displayQty>0?(item.autoOrder?'#3b82f6':'#16a34a'):'#bbb'}">
+          class="step-val-input"
+          style="width:44px;font-size:15px;font-weight:800;text-align:center;border-radius:6px;padding:2px 4px;font-family:inherit;outline:none;-webkit-appearance:none;border:${displayQty>0?(item.autoOrder?'1.5px solid #3b82f6':'1.5px solid #16a34a'):'1.5px dashed #e0e0e0'};background:${displayQty>0?(item.autoOrder?'#eff6ff':'#f0fdf4'):'transparent'};color:${displayQty>0?(item.autoOrder?'#3b82f6':'#16a34a'):'#bbb'}">
         <button class="step-btn plus" onclick="stepQty('${catId}','${item.id}',1)">+</button>
-      </div>`:''}
+      </div>
+      ${getOrderAvg(item.name)?`<div class="avg-hint">평균 ${getOrderAvg(item.name)}${item.unit}</div>`:''}`:''}
     </div>
     <div class="card-footer">
       <div class="order-btns">
@@ -630,7 +756,7 @@ function createItemCard(catId,item,idx,total,isInactive=false){
         ?`<button class="card-menu-item" onclick="toggleInactive('${catId}','${item.id}',false);closeAllMenus()">✅ 활성화</button>`
         :`<button class="card-menu-item" onclick="toggleAutoOrder('${catId}','${item.id}');closeAllMenus()">${item.autoOrder?'🔵 자동발주 OFF':'⚪ 자동발주 ON'}</button>
           <button class="card-menu-item" onclick="openMoveCat('${catId}','${item.id}');closeAllMenus()">📂 카테고리 이동</button>
-          ${catId==='ingredient'?`<button class="card-menu-item" onclick="openMoveSection('${catId}','${item.id}');closeAllMenus()">📌 섹션 이동</button>`:''}
+          ${CAT_ZONES[catId]?`<button class="card-menu-item" onclick="openMoveSection('${catId}','${item.id}');closeAllMenus()">📌 섹션 이동</button>`:''}
           <button class="card-menu-item" onclick="toggleInactive('${catId}','${item.id}',true);closeAllMenus()">🚫 미사용으로</button>`}
       <button class="card-menu-item danger" onclick="askDelete('${catId}','${item.id}');closeAllMenus()">🗑 삭제</button>
     </div>
@@ -652,7 +778,7 @@ function createItemCard(catId,item,idx,total,isInactive=false){
   return card;
 }
 
-function getCatEmoji(catId){return({seafood:'🐟',ingredient:'🥬',alcohol:'🍺',packaging:'📦',etc:'🧹',welfare:'🎁'})[catId]||'📦'}
+function getCatEmoji(catId){return({aquarium:'🐠',seafood:'🐟',pantry_freezer_oroshi:'🥬',ingredient:'🥬',shelf_pkg_aging:'🗃',packaging:'📦',hall_cold_showcase_pkg:'🏮',hall_shelves:'🗄',alcohol_beverage:'🍺',alcohol:'🍺',etc:'🧹',welfare:'🎁'})[catId]||'📦'}
 
 // ── 이미지 ──
 async function renderAllImages(){
@@ -783,7 +909,8 @@ function openMoveSection(catId,itemId){
   pendingMoveSection={catId,itemId};
   const item=state.categories.find(c=>c.id===catId)?.items.find(i=>i.id===itemId);
   document.getElementById('moveSectionItemName').textContent=`"${item?.name}" 이동할 섹션 선택`;
-  document.getElementById('moveSectionList').innerHTML=INGREDIENT_ZONES.map(z=>`<div class="move-section-item" onclick="confirmMoveSection('${z.id}')">${z.name}</div>`).join('');
+  const zones=CAT_ZONES[catId]||INGREDIENT_ZONES;
+  document.getElementById('moveSectionList').innerHTML=zones.map(z=>`<div class="move-section-item" onclick="confirmMoveSection('${z.id}')">${z.name}</div>`).join('');
   document.getElementById('moveSectionModal').classList.add('show');
 }
 function confirmMoveSection(zoneId){
@@ -795,6 +922,25 @@ function confirmMoveSection(zoneId){
 }
 
 // ── 탭/스테퍼 ──
+function toggleGroup(e,groupId){
+  e.stopPropagation();
+  if(openGroups.has(groupId)){
+    openGroups.delete(groupId);
+  }else{
+    // 다른 그룹 닫기
+    openGroups.clear();
+    openGroups.add(groupId);
+    // 그룹 첫번째 카테고리로 이동 (아직 활성 아닌 경우)
+    const group=GROUP_STRUCTURE.find(g=>g.id===groupId);
+    if(group&&!group.cats.includes(activeCat)&&group.cats.length>0){
+      switchTab(group.cats[0]);return;
+    }
+  }
+  renderTabs();
+}
+// 외부 클릭시 드롭다운 닫기
+document.addEventListener('click',()=>{if(openGroups.size>0){openGroups.clear();renderTabs();}});
+
 function switchTab(catId){
   activeCat=catId;renderTabs();
   document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
@@ -1038,10 +1184,11 @@ function rerenderCurrentTab(catId){
   div.className='tab-content'+(wasActive?' active':'');div.id='tab_'+catId;
   const activeItems=cat.items.filter(i=>!i.inactive);
   const inactiveItems=cat.items.filter(i=>i.inactive);
-  if(catId==='ingredient'){
-    const zoneMap={};INGREDIENT_ZONES.forEach(z=>{zoneMap[z.id]=[];});const unzoned=[];
-    activeItems.forEach(item=>{let placed=false;for(const z of INGREDIENT_ZONES){if(z.items.includes(item.id)){zoneMap[z.id].push(item);placed=true;break}}if(!placed)unzoned.push(item);});
-    INGREDIENT_ZONES.forEach(zone=>{const zi=zoneMap[zone.id];if(!zi.length)return;div.appendChild(buildZoneSection(catId,zone.id,zone.name,zi,true));});
+  const reCatZones=CAT_ZONES[catId];
+  if(reCatZones&&reCatZones.length>0){
+    const zoneMap={};reCatZones.forEach(z=>{zoneMap[z.id]=[];});const unzoned=[];
+    activeItems.forEach(item=>{let placed=false;for(const z of reCatZones){if(z.items.includes(item.id)){zoneMap[z.id].push(item);placed=true;break}}if(!placed)unzoned.push(item);});
+    reCatZones.forEach(zone=>{const zi=zoneMap[zone.id]||[];div.appendChild(buildZoneSection(catId,zone.id,zone.name,zi,true));});
     if(unzoned.length>0)div.appendChild(buildZoneSection(catId,'z_extra','📌 기타',unzoned,true));
   }else{
     const grid=document.createElement('div');grid.className='card-grid';
@@ -1064,14 +1211,16 @@ function rerenderCurrentTab(catId){
 
 // ── 초기화 ──
 openImgDB();
-loadTranslations(); // ✅ 5번: 번역 시트 로드
+loadTranslations();
+loadOrderAvg(); // 발주이력 평균 로드
 renderTabs();
 renderContent();
 const hasQty=state.categories.some(c=>c.items.some(i=>i.qty>0));
 if(hasQty)document.getElementById('draftBadge').classList.add('show');
 syncFromServer();
-setInterval(pollServer,15000); // ✅ 6번: 15초로 단축 (수량 동기화 빠르게)
-setInterval(loadTranslations,60000); // 번역 1분마다 갱신
+setInterval(pollServer,15000);
+setInterval(loadTranslations,60000);
+setInterval(loadOrderAvg,300000); // 발주평균 5분마다 갱신
 </script>
 </body>
 </html>
