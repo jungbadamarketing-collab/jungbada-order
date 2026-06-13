@@ -532,54 +532,120 @@ let selectedUnit = '개';
 let pendingMoveCat = {catId:null,itemId:null};
 let pendingMoveSection = {catId:null,itemId:null};
 
-function loadState(){
-  try{
-    const s=localStorage.getItem('jungbada_order_v4');
-    if(s){
-      const p=JSON.parse(s);
-      if(!p.managers) p.managers=DEFAULT_DATA.managers;
-      p.categories.forEach(cat=>{
-        cat.items.forEach(item=>{
-          if(item.autoOrder===undefined) item.autoOrder=false;
-          if(item.inactive===undefined) item.inactive=false;
-          if(item.manualQty===undefined) item.manualQty=false;
-          if(!item.orders) item.orders=[];
-          if(!item.translations) item.translations={};
-        });
-      });
-      p.vendors.forEach(v=>{
-        if(v.contact===undefined) v.contact='';
-        if(v.link===undefined) v.link='';
-        if(v.vid===undefined) v.vid='';
-        if(v.pw===undefined) v.pw='';
-        if(v.suffix===undefined) v.suffix='';
-      });
-      // 포장재를 주류 앞으로 (14번 요청)
-      const cats = p.categories;
-      const pkgIdx = cats.findIndex(c=>c.id==='packaging');
-      const alcIdx = cats.findIndex(c=>c.id==='alcohol');
-      if(pkgIdx > alcIdx && pkgIdx !== -1 && alcIdx !== -1){
-        const [pkg] = cats.splice(pkgIdx,1);
-        cats.splice(alcIdx,0,pkg);
-      }
-      // welfare 없으면 추가
-      if(!p.categories.find(c=>c.id==='welfare')) p.categories.push(DEFAULT_DATA.categories.find(c=>c.id==='welfare'));
-      return p;
-    }
-  }catch(e){}
-  const d = JSON.parse(JSON.stringify(DEFAULT_DATA));
-  // 기본 데이터에서도 포장재를 주류 앞으로
-  const cats = d.categories;
+function migrateState(p){
+  if(!p.managers) p.managers=DEFAULT_DATA.managers;
+  p.categories.forEach(cat=>{
+    cat.items.forEach(item=>{
+      if(item.autoOrder===undefined) item.autoOrder=false;
+      if(item.inactive===undefined) item.inactive=false;
+      if(item.manualQty===undefined) item.manualQty=false;
+      if(!item.orders) item.orders=[];
+      if(!item.translations) item.translations={};
+    });
+  });
+  p.vendors.forEach(v=>{
+    if(v.contact===undefined) v.contact='';
+    if(v.link===undefined) v.link='';
+    if(v.vid===undefined) v.vid='';
+    if(v.pw===undefined) v.pw='';
+    if(v.suffix===undefined) v.suffix='';
+  });
+  // 포장재를 주류 앞으로
+  const cats = p.categories;
   const pkgIdx = cats.findIndex(c=>c.id==='packaging');
   const alcIdx = cats.findIndex(c=>c.id==='alcohol');
   if(pkgIdx > alcIdx && pkgIdx !== -1 && alcIdx !== -1){
     const [pkg] = cats.splice(pkgIdx,1);
     cats.splice(alcIdx,0,pkg);
   }
+  if(!p.categories.find(c=>c.id==='welfare')) p.categories.push(DEFAULT_DATA.categories.find(c=>c.id==='welfare'));
+  return p;
+}
+
+function loadState(){
+  try{
+    const s=localStorage.getItem('jungbada_order_v4');
+    if(s){ return migrateState(JSON.parse(s)); }
+  }catch(e){}
+  const d=JSON.parse(JSON.stringify(DEFAULT_DATA));
+  const cats=d.categories;
+  const pkgIdx=cats.findIndex(c=>c.id==='packaging');
+  const alcIdx=cats.findIndex(c=>c.id==='alcohol');
+  if(pkgIdx>alcIdx&&pkgIdx!==-1&&alcIdx!==-1){const[pkg]=cats.splice(pkgIdx,1);cats.splice(alcIdx,0,pkg);}
   return d;
 }
 
-function save(){localStorage.setItem('jungbada_order_v4',JSON.stringify(state))}
+// 서버에서 최신 데이터 불러와서 병합
+async function syncFromServer(){
+  try {
+    const res = await fetch(GAS_URL + '?action=loadAppData');
+    const json = await res.json();
+    if(!json.data) return;
+    const serverData = json.data;
+    const serverTime = json.updatedAt ? new Date(json.updatedAt) : null;
+
+    // localStorage 데이터가 없거나 서버가 더 최신이면 서버 데이터 사용
+    const localRaw = localStorage.getItem('jungbada_order_v4');
+    if(!localRaw){
+      state = migrateState({ ...DEFAULT_DATA, ...serverData });
+      localStorage.setItem('jungbada_order_v4', JSON.stringify(state));
+      renderTabs(); renderContent();
+      showSyncNotice('☁️ 서버에서 데이터를 불러왔습니다');
+      return;
+    }
+
+    // 서버와 로컬 중 어느 게 더 최신인지 확인
+    const localTime = localStorage.getItem('jungbada_order_v4_time');
+    const localTimeDate = localTime ? new Date(localTime) : null;
+
+    if(serverTime && (!localTimeDate || serverTime > localTimeDate)){
+      // 서버가 더 최신 → 서버로 덮어쓰기 (단, 수량은 로컬 유지)
+      const localState = JSON.parse(localRaw);
+      const qtyMap = {};
+      localState.categories.forEach(cat=>{
+        cat.items.forEach(item=>{ if(item.qty>0) qtyMap[item.id]=item.qty; });
+      });
+      state = migrateState({ ...localState, ...serverData,
+        categories: serverData.categories.map(cat=>({
+          ...cat,
+          items: cat.items.map(item=>({
+            ...item,
+            qty: qtyMap[item.id] || 0
+          }))
+        }))
+      });
+      localStorage.setItem('jungbada_order_v4', JSON.stringify(state));
+      renderTabs(); renderContent();
+      showSyncNotice('☁️ 최신 데이터로 업데이트됐습니다');
+    }
+  } catch(e) {}
+}
+
+function showSyncNotice(msg){
+  const n=document.createElement('div');
+  n.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;z-index:999;white-space:nowrap;pointer-events:none';
+  n.textContent=msg;
+  document.body.appendChild(n);
+  setTimeout(()=>n.remove(),2500);
+}
+
+function save(){
+  localStorage.setItem('jungbada_order_v4',JSON.stringify(state));
+  localStorage.setItem('jungbada_order_v4_time', new Date().toISOString());
+  clearTimeout(save._t);
+  save._t = setTimeout(saveToServer, 1500);
+}
+
+// 서버(Apps Script)에 앱 데이터 저장
+async function saveToServer(){
+  try {
+    const payload = { categories: state.categories, vendors: state.vendors };
+    await fetch(GAS_URL + '?action=saveAppData', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  } catch(e) {}
+}
 function saveDraft(){
   save();
   document.getElementById('draftBadge').classList.add('show');
@@ -794,8 +860,16 @@ async function renderAllImages(){
   const cats=activeCat==='settings'?[]:[state.categories.find(c=>c.id===activeCat)].filter(Boolean);
   for(const cat of cats){
     for(const item of cat.items){
-      const imgData=await loadImg('img_'+item.id);
-      if(imgData) setCardImage(item.id,imgData);
+      // 드라이브 URL 있으면 우선 사용
+      if(item.imageUrl){
+        setCardImage(item.id, item.imageUrl);
+        // 로컬에도 캐시 (오프라인 대비)
+        const localImg=await loadImg('img_'+item.id);
+        if(!localImg) continue;
+      } else {
+        const imgData=await loadImg('img_'+item.id);
+        if(imgData) setCardImage(item.id,imgData);
+      }
     }
   }
 }
@@ -808,8 +882,33 @@ function triggerImgUpload(itemId){document.getElementById('imgInput_'+itemId)?.c
 async function handleImgUpload(itemId,input){
   const file=input.files[0];
   if(!file) return;
+
+  // 로컬에도 미리 표시 (빠른 UX)
   const reader=new FileReader();
-  reader.onload=async e=>{await saveImg('img_'+itemId,e.target.result);setCardImage(itemId,e.target.result)};
+  reader.onload=async e=>{
+    const base64=e.target.result;
+    await saveImg('img_'+itemId,base64);
+    setCardImage(itemId,base64);
+
+    // 드라이브에 업로드 (백그라운드)
+    try {
+      showSyncNotice('📷 사진 서버에 업로드 중...');
+      const res=await fetch(GAS_URL+'?action=uploadImage',{
+        method:'POST',
+        body:JSON.stringify({itemId, imageBase64:base64, mimeType:file.type})
+      });
+      const data=await res.json();
+      if(data.success && data.url){
+        // 드라이브 URL을 품목 데이터에 저장
+        state.categories.forEach(cat=>{
+          const item=cat.items.find(i=>i.id===itemId);
+          if(item){ item.imageUrl=data.url; }
+        });
+        save();
+        showSyncNotice('✅ 사진 업로드 완료');
+      }
+    } catch(err){ showSyncNotice('⚠️ 사진 서버 업로드 실패 (로컬에는 저장됨)'); }
+  };
   reader.readAsDataURL(file);
 }
 
@@ -1307,6 +1406,8 @@ renderTabs();
 renderContent();
 const hasQty=state.categories.some(c=>c.items.some(i=>i.qty>0));
 if(hasQty) document.getElementById('draftBadge').classList.add('show');
+// 서버에서 최신 데이터 동기화
+syncFromServer();
 </script>
 </body>
 </html>
