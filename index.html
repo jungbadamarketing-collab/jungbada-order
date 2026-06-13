@@ -2,210 +2,232 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>정바다 발주</title>
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Apple SD Gothic Neo', sans-serif; background: #f7f7f5; color: #1a1a1a; font-size: 14px; overscroll-behavior: none; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue','Apple SD Gothic Neo',sans-serif;background:#f7f7f5;color:#1a1a1a;font-size:15px;overscroll-behavior:none}
 
 /* ── 헤더 ── */
-.header { position: sticky; top: 0; z-index: 50; background: #fff; border-bottom: 1px solid #e8e8e5; padding: 12px 16px 0; }
-.header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-.header-top h1 { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
-.draft-badge { font-size: 11px; font-weight: 600; background: #fff3cd; color: #856404; border: 1px solid #ffc107; border-radius: 20px; padding: 3px 10px; display: none; }
-.draft-badge.show { display: inline-block; }
-.search-wrap { position: relative; margin-bottom: 10px; }
-.search-input { width: 100%; padding: 9px 14px 9px 36px; border: 1.5px solid #e8e8e5; border-radius: 10px; font-size: 14px; background: #f7f7f5; color: #1a1a1a; outline: none; font-family: inherit; }
-.search-input:focus { border-color: #aaa; background: #fff; }
-.search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); font-size: 15px; color: #bbb; }
-.search-clear { position: absolute; right: 11px; top: 50%; transform: translateY(-50%); font-size: 16px; color: #bbb; cursor: pointer; display: none; }
-.tab-bar { display: flex; gap: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-.tab-bar::-webkit-scrollbar { display: none; }
-.tab-btn { flex-shrink: 0; font-size: 13px; font-weight: 600; padding: 9px 14px; border: none; background: transparent; color: #aaa; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; font-family: inherit; }
-.tab-btn.active { color: #1a1a1a; border-bottom-color: #1a1a1a; }
+.header{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid #e8e8e5;padding:12px 16px 0}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.header-top h1{font-size:18px;font-weight:700}
+.draft-badge{font-size:11px;font-weight:600;background:#fff3cd;color:#856404;border:1px solid #ffc107;border-radius:20px;padding:3px 10px;display:none}
+.draft-badge.show{display:inline-block}
+.search-wrap{position:relative;margin-bottom:10px}
+.search-input{width:100%;padding:9px 14px 9px 36px;border:1.5px solid #e8e8e5;border-radius:10px;font-size:14px;background:#f7f7f5;color:#1a1a1a;outline:none;font-family:inherit}
+.search-input:focus{border-color:#aaa;background:#fff}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:15px;color:#bbb}
+.search-clear{position:absolute;right:11px;top:50%;transform:translateY(-50%);font-size:16px;color:#bbb;cursor:pointer;display:none}
+.tab-bar{display:flex;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{flex-shrink:0;font-size:14px;font-weight:600;padding:9px 14px;border:none;background:transparent;color:#aaa;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;font-family:inherit}
+.tab-btn.active{color:#1a1a1a;border-bottom-color:#1a1a1a}
 
 /* ── 콘텐츠 ── */
-.content { padding: 14px; padding-bottom: 100px; }
-.tab-content { display: none; }
-.tab-content.active { display: block; }
-
-/* 카테고리 공식 표시 */
-.formula-bar { font-size: 11px; color: #bbb; background: #f7f7f5; border-radius: 8px; padding: 7px 11px; margin-bottom: 12px; line-height: 1.5; }
-.formula-bar strong { color: #999; }
+.content{padding:14px;padding-bottom:100px}
+.tab-content{display:none}
+.tab-content.active{display:block}
 
 /* 구역 섹션 */
-.zone-section { margin-bottom: 20px; }
-.zone-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-.zone-title { font-size: 12px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px; }
-.zone-count { font-size: 11px; color: #bbb; }
+.zone-section{margin-bottom:22px}
+.zone-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.zone-title-wrap{display:flex;align-items:center;gap:8px}
+.zone-title{font-size:15.6px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;border-radius:4px;padding:2px 4px}
+.zone-title:hover{background:#f0f0ee}
+.zone-title-input{font-size:15.6px;font-weight:700;border:1.5px solid #1a1a1a;border-radius:6px;padding:2px 6px;font-family:inherit;outline:none;display:none;width:140px}
+.zone-save-btn{font-size:11px;padding:3px 8px;border-radius:6px;border:1.5px solid #1a1a1a;background:#1a1a1a;color:#fff;cursor:pointer;display:none}
+.zone-count{font-size:12px;color:#bbb}
+.zone-add-btn{font-size:12px;padding:4px 10px;border:1.5px dashed #d0d0ce;border-radius:8px;background:#fafaf8;color:#aaa;cursor:pointer;font-weight:600;font-family:inherit}
 
 /* 카드 그리드 */
-.card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
 /* 품목 카드 */
-.item-card { background: #fff; border: 1.5px solid #e8e8e5; border-radius: 14px; overflow: visible; position: relative; }
-.item-card.highlighted { border-color: #f59e0b; box-shadow: 0 0 0 3px rgba(245,158,11,0.15); }
-.item-card.inactive { opacity: 0.4; filter: grayscale(60%); }
-.item-card.inactive .stepper { display: none; }
+.item-card{background:#fff;border:1.5px solid #e8e8e5;border-radius:14px;overflow:visible;position:relative}
+.item-card.highlighted{border-color:#f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,0.15)}
+.item-card.inactive{opacity:0.4;filter:grayscale(60%)}
+.item-card.inactive .stepper{display:none}
 
-/* D-데이 뱃지 - 이미지 우상단 */
-.dday-badge { position: absolute; top: 7px; right: 7px; z-index: 5; font-size: 10px; font-weight: 700; padding: 3px 7px; border-radius: 20px; white-space: nowrap; }
-.dday-today { background: #dc2626; color: #fff; }
-.dday-soon  { background: #f59e0b; color: #fff; }
-.dday-ok    { background: #16a34a; color: #fff; }
-.dday-first { background: #dc2626; color: #fff; }
+/* D-데이 뱃지 */
+.dday-badge{position:absolute;top:7px;right:7px;z-index:5;font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap}
+.dday-today{background:#dc2626;color:#fff}
+.dday-soon{background:#f59e0b;color:#fff}
+.dday-ok{background:#16a34a;color:#fff}
+.dday-first{background:#dc2626;color:#fff}
+
+/* 평균 발주량 뱃지 */
+.avg-badge{position:absolute;bottom:84px;right:7px;z-index:5;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;background:rgba(0,0,0,0.5);color:#fff;display:none}
+.avg-badge.show{display:block}
 
 /* 자동발주 뱃지 */
-.auto-badge { position: absolute; top: 7px; left: 7px; z-index: 5; font-size: 10px; font-weight: 700; padding: 3px 7px; border-radius: 20px; background: #3b82f6; color: #fff; display: none; }
-.auto-badge.show { display: block; }
+.auto-badge{position:absolute;top:7px;left:7px;z-index:5;font-size:10px;font-weight:700;padding:3px 7px;border-radius:20px;background:#3b82f6;color:#fff;display:none}
+.auto-badge.show{display:block}
 
 /* 이미지 */
-.card-img { width: 100%; aspect-ratio: 1; background: #f7f7f5; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 12px 12px 0 0; cursor: pointer; }
-.card-img img { width: 100%; height: 100%; object-fit: cover; }
-.card-img-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; width: 100%; height: 100%; }
-.card-img-placeholder .emoji { font-size: 26px; opacity: 0.25; }
-.card-img-placeholder .edit-hint { font-size: 10px; color: #ccc; font-weight: 500; }
-.img-input { display: none; }
+.card-img{width:100%;aspect-ratio:1;background:#f7f7f5;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:12px 12px 0 0;cursor:pointer;position:relative}
+.card-img img{width:100%;height:100%;object-fit:cover}
+.card-img-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:100%;height:100%}
+.card-img-placeholder .emoji{font-size:28px;opacity:0.25}
+.card-img-placeholder .edit-hint{font-size:11px;color:#ccc;font-weight:500}
+.img-input{display:none}
 
 /* 카드 바디 */
-.card-body { padding: 8px 10px 10px; }
-.card-name-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 3px; }
-.card-name { font-size: 12px; font-weight: 700; color: #1a1a1a; line-height: 1.3; flex: 1; cursor: pointer; border-radius: 4px; padding: 1px 3px; margin: -1px -3px; word-break: keep-all; }
-.card-name:hover { background: #f0f0ee; }
-.card-name-input { font-size: 12px; font-weight: 700; border: 1.5px solid #1a1a1a; border-radius: 5px; padding: 2px 5px; width: 100%; font-family: inherit; outline: none; display: none; }
-.card-edit-row { display: flex; align-items: center; gap: 4px; margin-bottom: 6px; }
-.card-vendor-text { font-size: 10px; color: #bbb; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.card-edit-btn { font-size: 12px; color: #ccc; background: none; border: none; cursor: pointer; padding: 0 2px; flex-shrink: 0; }
-.card-edit-btn:hover { color: #888; }
+.card-body{padding:9px 11px 10px}
+.card-name-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.card-name{font-size:13.5px;font-weight:700;color:#1a1a1a;line-height:1.3;flex:1;cursor:pointer;border-radius:4px;padding:1px 3px;margin:-1px -3px;word-break:keep-all}
+.card-name:hover{background:#f0f0ee}
+.card-name-edit-wrap{display:none;flex-direction:column;gap:5px;margin-bottom:4px}
+.card-name-edit-wrap.show{display:flex}
+.card-name-input-edit{font-size:13.5px;font-weight:700;border:1.5px solid #1a1a1a;border-radius:6px;padding:4px 7px;font-family:inherit;outline:none;width:100%}
+.name-save-btn{font-size:12px;padding:4px 10px;border-radius:7px;border:none;background:#1a1a1a;color:#fff;cursor:pointer;font-family:inherit;align-self:flex-end}
+
+/* 업체/단위 편집 */
+.card-edit-row{display:flex;align-items:center;gap:4px;margin-bottom:7px}
+.card-vendor-unit-text{font-size:11.5px;color:#bbb;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;border-radius:4px;padding:1px 3px}
+.card-vendor-unit-text:hover{background:#f0f0ee;color:#888}
+
+/* 인라인 수정 팝업 - 업체/단위 */
+.inline-edit-popup{position:absolute;left:0;right:0;bottom:50px;background:#fff;border:1.5px solid #e8e8e5;border-radius:12px;padding:12px;box-shadow:0 4px 20px rgba(0,0,0,0.12);z-index:35;display:none}
+.inline-edit-popup.show{display:block}
+.inline-edit-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.inline-edit-row:last-child{margin-bottom:0}
+.inline-edit-label{font-size:12px;color:#aaa;width:34px;flex-shrink:0;font-weight:600}
+.inline-edit-select{flex:1;padding:7px 10px;border:1.5px solid #e8e8e5;border-radius:7px;font-size:14px;font-family:inherit;background:#fff;outline:none;-webkit-appearance:none;appearance:none}
+.inline-save-btn{width:100%;margin-top:8px;padding:8px;border-radius:8px;border:none;background:#1a1a1a;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
 
 /* 스태퍼 */
-.stepper { display: flex; align-items: center; justify-content: space-between; background: #f7f7f5; border-radius: 8px; padding: 3px; }
-.step-btn { width: 30px; height: 30px; border: none; border-radius: 6px; font-size: 18px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; font-family: inherit; line-height: 1; }
-.step-btn.minus { background: #fee2e2; color: #dc2626; }
-.step-btn.minus:active { background: #fecaca; }
-.step-btn.plus { background: #dcfce7; color: #16a34a; }
-.step-btn.plus:active { background: #bbf7d0; }
-.step-val { font-size: 14px; font-weight: 800; min-width: 28px; text-align: center; color: #bbb; border: 1.5px dashed #e0e0e0; border-radius: 6px; padding: 2px 4px; transition: all 0.15s; }
-.step-val.is-manual { color: #16a34a; border: 1.5px solid #16a34a; background: #f0fdf4; }
-.step-val.is-auto { color: #3b82f6; border: 1.5px solid #3b82f6; background: #eff6ff; }
+.stepper{display:flex;align-items:center;justify-content:space-between;background:#f7f7f5;border-radius:8px;padding:3px}
+.step-btn{width:32px;height:32px;border:none;border-radius:6px;font-size:20px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;line-height:1}
+.step-btn.minus{background:#fee2e2;color:#dc2626}
+.step-btn.minus:active{background:#fecaca}
+.step-btn.plus{background:#dcfce7;color:#16a34a}
+.step-btn.plus:active{background:#bbf7d0}
+.step-val{font-size:15px;font-weight:800;min-width:28px;text-align:center;color:#bbb;border:1.5px dashed #e0e0e0;border-radius:6px;padding:2px 4px;transition:all 0.15s}
+.step-val.is-manual{color:#16a34a;border:1.5px solid #16a34a;background:#f0fdf4}
+.step-val.is-auto{color:#3b82f6;border:1.5px solid #3b82f6;background:#eff6ff}
 
 /* 카드 푸터 */
-.card-footer { display: flex; align-items: center; justify-content: space-between; padding: 4px 8px 7px; border-top: 1px solid #f5f5f3; }
-.order-btns { display: flex; gap: 3px; }
-.order-btn { font-size: 10px; color: #ccc; background: none; border: 1px solid #e8e8e5; border-radius: 4px; padding: 2px 6px; cursor: pointer; }
-.order-btn:active { background: #f0f0ee; }
-.card-menu-btn { font-size: 15px; color: #ccc; background: none; border: none; cursor: pointer; padding: 1px 3px; }
-.card-menu-btn:hover { color: #888; }
-.card-menu-popup { position: absolute; right: 6px; bottom: 36px; background: #fff; border: 1.5px solid #e8e8e5; border-radius: 10px; padding: 4px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); z-index: 30; display: none; min-width: 140px; }
-.card-menu-popup.show { display: block; }
-.card-menu-item { display: block; width: 100%; padding: 8px 12px; font-size: 13px; font-weight: 500; text-align: left; background: none; border: none; cursor: pointer; border-radius: 6px; font-family: inherit; color: #1a1a1a; }
-.card-menu-item:hover { background: #f5f5f3; }
-.card-menu-item.danger { color: #dc2626; }
-.card-menu-item.danger:hover { background: #fee2e2; }
+.card-footer{display:flex;align-items:center;justify-content:space-between;padding:4px 8px 7px;border-top:1px solid #f5f5f3}
+.order-btns{display:flex;gap:3px}
+.order-btn{font-size:11px;color:#ccc;background:none;border:1px solid #e8e8e5;border-radius:4px;padding:2px 7px;cursor:pointer}
+.order-btn:active{background:#f0f0ee}
+.card-menu-btn{font-size:16px;color:#ccc;background:none;border:none;cursor:pointer;padding:1px 4px}
+.card-menu-btn:hover{color:#888}
+.card-menu-popup{position:absolute;right:6px;bottom:36px;background:#fff;border:1.5px solid #e8e8e5;border-radius:10px;padding:4px;box-shadow:0 4px 16px rgba(0,0,0,0.12);z-index:30;display:none;min-width:160px}
+.card-menu-popup.show{display:block}
+.card-menu-item{display:block;width:100%;padding:9px 13px;font-size:14px;font-weight:500;text-align:left;background:none;border:none;cursor:pointer;border-radius:6px;font-family:inherit;color:#1a1a1a}
+.card-menu-item:hover{background:#f5f5f3}
+.card-menu-item.danger{color:#dc2626}
+.card-menu-item.danger:hover{background:#fee2e2}
 
-/* 인라인 수정 팝업 */
-.inline-edit-popup { position: absolute; left: 0; right: 0; bottom: 44px; background: #fff; border: 1.5px solid #e8e8e5; border-radius: 12px; padding: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.12); z-index: 35; display: none; }
-.inline-edit-popup.show { display: block; }
-.inline-edit-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-.inline-edit-row:last-child { margin-bottom: 0; }
-.inline-edit-label { font-size: 11px; color: #aaa; width: 32px; flex-shrink: 0; font-weight: 600; }
-.inline-edit-select { flex: 1; padding: 6px 10px; border: 1.5px solid #e8e8e5; border-radius: 7px; font-size: 13px; font-family: inherit; background: #fff; outline: none; -webkit-appearance: none; }
+/* 네팔어/영어 번역 */
+.card-translation{font-size:10px;color:#aaa;line-height:1.4;margin-bottom:5px;min-height:14px}
 
 /* 품목 추가 버튼 */
-.add-item-row { margin-top: 10px; }
-.add-item-btn { width: 100%; padding: 11px; border: 1.5px dashed #d0d0ce; border-radius: 11px; font-size: 13px; font-weight: 600; background: #fafaf8; cursor: pointer; color: #aaa; font-family: inherit; }
-.add-item-btn:active { background: #f0f0ee; }
+.add-item-row{margin-top:10px}
+.add-item-btn{width:100%;padding:12px;border:1.5px dashed #d0d0ce;border-radius:11px;font-size:14px;font-weight:600;background:#fafaf8;cursor:pointer;color:#aaa;font-family:inherit}
+.add-item-btn:active{background:#f0f0ee}
 
 /* 미사용 섹션 */
-.inactive-section { margin-top: 18px; }
-.inactive-toggle { display: flex; align-items: center; justify-content: space-between; padding: 10px 13px; background: #f0f0ee; border-radius: 9px; cursor: pointer; border: none; width: 100%; font-family: inherit; }
-.inactive-toggle-label { font-size: 12px; font-weight: 600; color: #888; }
-.inactive-chevron { font-size: 11px; color: #aaa; transition: transform 0.2s; }
-.inactive-chevron.open { transform: rotate(180deg); }
-.inactive-grid { display: none; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-.inactive-grid.open { display: grid; }
+.inactive-section{margin-top:18px}
+.inactive-toggle{display:flex;align-items:center;justify-content:space-between;padding:10px 13px;background:#f0f0ee;border-radius:9px;cursor:pointer;border:none;width:100%;font-family:inherit}
+.inactive-toggle-label{font-size:13px;font-weight:600;color:#888}
+.inactive-chevron{font-size:11px;color:#aaa;transition:transform 0.2s}
+.inactive-chevron.open{transform:rotate(180deg)}
+.inactive-grid{display:none;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.inactive-grid.open{display:grid}
 
-/* 모달 추가 필드 */
-.add-modal-field { margin-bottom: 14px; }
-.add-modal-field label { display: block; font-size: 11px; font-weight: 700; color: #888; margin-bottom: 7px; text-transform: uppercase; letter-spacing: 0.04em; }
-.add-modal-input { width: 100%; padding: 11px 13px; border: 1.5px solid #e8e8e5; border-radius: 10px; font-size: 15px; font-family: inherit; background: #fff; outline: none; color: #1a1a1a; }
-.add-modal-input:focus { border-color: #999; }
-.add-modal-select { width: 100%; padding: 11px 13px; border: 1.5px solid #e8e8e5; border-radius: 10px; font-size: 15px; font-family: inherit; background: #fff; outline: none; color: #1a1a1a; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath fill='%23999' d='M7 9L0 0h14z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 13px center; }
-.unit-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
-.unit-chip { padding: 8px 4px; text-align: center; border: 1.5px solid #e8e8e5; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; background: #fff; color: #666; }
-.unit-chip.selected { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+/* 모달 공통 */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;align-items:flex-end;justify-content:center}
+.modal-bg.show{display:flex}
+.modal{background:#fff;border-radius:20px 20px 0 0;padding:18px 18px 34px;width:100%;max-height:88vh;overflow-y:auto}
+.modal-handle{width:36px;height:4px;background:#e0e0e0;border-radius:2px;margin:0 auto 16px}
+.modal h3{font-size:17px;font-weight:700;margin-bottom:14px}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.modal-btn{padding:10px 18px;border-radius:10px;border:1.5px solid #e8e8e5;font-size:14px;font-weight:600;background:#fff;cursor:pointer;font-family:inherit;color:#1a1a1a}
+.modal-btn.danger{background:#fee2e2;color:#dc2626;border-color:#fca5a5}
+.modal-btn.confirm{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.modal-btn.confirm:disabled{background:#d1d5db;border-color:#d1d5db;cursor:not-allowed}
+
+/* 품목 추가 모달 */
+.add-modal-field{margin-bottom:14px}
+.add-modal-field label{display:block;font-size:12px;font-weight:700;color:#888;margin-bottom:7px;text-transform:uppercase;letter-spacing:0.04em}
+.add-modal-input{width:100%;padding:12px 13px;border:1.5px solid #e8e8e5;border-radius:10px;font-size:16px;font-family:inherit;background:#fff;outline:none;color:#1a1a1a}
+.add-modal-input:focus{border-color:#999}
+.add-modal-select{width:100%;padding:12px 13px;border:1.5px solid #e8e8e5;border-radius:10px;font-size:16px;font-family:inherit;background:#fff;outline:none;color:#1a1a1a;-webkit-appearance:none}
+.unit-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.unit-chip{padding:9px 4px;text-align:center;border:1.5px solid #e8e8e5;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;background:#fff;color:#666}
+.unit-chip.selected{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+
+/* 발주 모달 */
+.order-preview-block{background:#f7f7f5;border-radius:10px;padding:12px;margin-bottom:10px;border:1px solid #e8e8e5}
+.order-vendor-name{font-size:13px;font-weight:700;color:#888;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.order-vendor-suffix{font-size:12px;color:#aaa;margin-bottom:6px;padding:4px 8px;background:#fff;border-radius:6px;border:1px solid #f0f0ee}
+.order-item-line{font-size:14px;padding:2px 0}
+.tag-sms{font-size:10px;padding:1px 6px;border-radius:4px;background:#dcfce7;color:#16a34a;font-weight:600}
+.tag-nosms{font-size:10px;padding:1px 6px;border-radius:4px;background:#f0f0ee;color:#999;font-weight:600}
+.send-status{padding:10px 14px;border-radius:9px;font-size:14px;margin-top:10px}
+.send-ok{background:#dcfce7;color:#16a34a}
+.send-err{background:#fee2e2;color:#dc2626}
 
 /* 설정 탭 */
-.settings-block { background: #fff; border-radius: 14px; border: 1.5px solid #e8e8e5; padding: 16px; margin-bottom: 14px; }
-.settings-block h3 { font-size: 12px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
-.settings-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-.settings-row label { font-size: 12px; color: #888; width: 70px; flex-shrink: 0; font-weight: 600; }
-.settings-input-field { flex: 1; padding: 9px 12px; border: 1.5px solid #e8e8e5; border-radius: 9px; font-size: 14px; font-family: inherit; background: #fff; outline: none; color: #1a1a1a; }
-.settings-input-field:focus { border-color: #999; }
+.settings-block{background:#fff;border-radius:14px;border:1.5px solid #e8e8e5;padding:16px;margin-bottom:14px}
+.settings-block h3{font-size:13px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:14px}
 
-/* 업체 카드 (간소화) */
-.vendor-card { border: 1.5px solid #e8e8e5; border-radius: 10px; padding: 11px 13px; margin-bottom: 8px; background: #fafaf8; }
-.vendor-card-top { display: flex; align-items: center; justify-content: space-between; }
-.vendor-card-info { flex: 1; }
-.vendor-name-label { font-size: 14px; font-weight: 700; display: block; margin-bottom: 2px; }
-.vendor-contact { font-size: 11px; color: #aaa; }
-.vendor-card-actions { display: flex; align-items: center; gap: 8px; }
-.vendor-sms-toggle { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 7px; border: 1.5px solid #e0e0e0; cursor: pointer; background: #fff; color: #bbb; }
-.vendor-sms-toggle.on { background: #dcfce7; color: #16a34a; border-color: #86efac; }
-.vendor-edit-btn { font-size: 14px; color: #ccc; background: none; border: none; cursor: pointer; }
-.vendor-edit-btn:hover { color: #888; }
-.vendor-del-btn { font-size: 14px; color: #ddd; background: none; border: none; cursor: pointer; }
-.vendor-del-btn:hover { color: #dc2626; }
+/* SOP 블록 */
+.sop-block{background:#fffbeb;border:1.5px solid #fde68a;border-radius:14px;padding:16px;margin-bottom:14px}
+.sop-block h3{font-size:14px;font-weight:700;color:#92400e;margin-bottom:10px}
+.sop-step{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.sop-num{width:24px;height:24px;background:#f59e0b;color:#fff;border-radius:50%;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.sop-text{font-size:13px;color:#78350f;line-height:1.6}
+.sop-text strong{color:#92400e}
 
-/* 업체 수정 폼 */
-.vendor-edit-form { border-top: 1px solid #f0f0ee; margin-top: 10px; padding-top: 10px; display: none; }
-.vendor-edit-form.open { display: block; }
-.vendor-field { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-.vendor-field label { font-size: 11px; color: #aaa; width: 40px; flex-shrink: 0; }
-.vendor-field input { flex: 1; padding: 7px 10px; border: 1.5px solid #e8e8e5; border-radius: 7px; font-size: 13px; font-family: inherit; background: #fff; outline: none; color: #1a1a1a; }
-.vendor-field input:focus { border-color: #999; }
+/* 업체 카드 */
+.vendor-card{border:1.5px solid #e8e8e5;border-radius:10px;padding:12px 14px;margin-bottom:8px;background:#fafaf8}
+.vendor-card-top{display:flex;align-items:center;justify-content:space-between}
+.vendor-card-info{flex:1}
+.vendor-name-label{font-size:15px;font-weight:700;display:block;margin-bottom:2px}
+.vendor-contact{font-size:12px;color:#aaa}
+.vendor-card-actions{display:flex;align-items:center;gap:8px}
+.vendor-sms-toggle{font-size:12px;font-weight:600;padding:5px 11px;border-radius:7px;border:1.5px solid #e0e0e0;cursor:pointer;background:#fff;color:#bbb}
+.vendor-sms-toggle.on{background:#dcfce7;color:#16a34a;border-color:#86efac}
+.vendor-edit-btn{font-size:15px;color:#ccc;background:none;border:none;cursor:pointer}
+.vendor-edit-btn:hover{color:#888}
+.vendor-del-btn{font-size:15px;color:#ddd;background:none;border:none;cursor:pointer}
+.vendor-del-btn:hover{color:#dc2626}
+.vendor-edit-form{border-top:1px solid #f0f0ee;margin-top:10px;padding-top:10px;display:none}
+.vendor-edit-form.open{display:block}
+.vendor-field{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.vendor-field label{font-size:12px;color:#aaa;width:52px;flex-shrink:0}
+.vendor-field input{flex:1;padding:8px 10px;border:1.5px solid #e8e8e5;border-radius:7px;font-size:14px;font-family:inherit;background:#fff;outline:none;color:#1a1a1a}
+.vendor-field input:focus{border-color:#999}
+.vendor-save-btn{width:100%;margin-top:6px;padding:9px;border-radius:8px;border:none;background:#1a1a1a;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.vendor-suffix-field{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.vendor-suffix-label{font-size:12px;color:#aaa;width:52px;flex-shrink:0}
+.vendor-suffix-input{flex:1;padding:8px 10px;border:1.5px solid #e8e8e5;border-radius:7px;font-size:14px;font-family:inherit;background:#fff;outline:none;color:#1a1a1a}
 
-.settings-add-row { display: flex; gap: 8px; margin-top: 10px; }
-.settings-input { flex: 1; padding: 9px 12px; border: 1.5px solid #e8e8e5; border-radius: 9px; font-size: 14px; font-family: inherit; background: #fff; outline: none; color: #1a1a1a; }
-.settings-add-btn { padding: 9px 16px; border-radius: 9px; border: 1.5px solid #e8e8e5; font-size: 13px; font-weight: 600; background: #fff; cursor: pointer; font-family: inherit; }
+.settings-add-row{display:flex;gap:8px;margin-top:10px}
+.settings-input{flex:1;padding:9px 12px;border:1.5px solid #e8e8e5;border-radius:9px;font-size:14px;font-family:inherit;background:#fff;outline:none;color:#1a1a1a}
+.settings-add-btn{padding:9px 16px;border-radius:9px;border:1.5px solid #e8e8e5;font-size:14px;font-weight:600;background:#fff;cursor:pointer;font-family:inherit}
+
+/* 카테고리 이동 모달 */
+.move-cat-item{padding:12px 14px;border:1.5px solid #e8e8e5;border-radius:9px;margin-bottom:7px;cursor:pointer;font-size:15px;font-weight:600;background:#fafaf8}
+.move-cat-item:hover{background:#f0f0ee}
+.move-cat-item.current{border-color:#1a1a1a;background:#fff}
+.move-section-item{padding:10px 14px;border:1.5px solid #e8e8e5;border-radius:9px;margin-bottom:6px;cursor:pointer;font-size:14px;font-weight:600;background:#fafaf8}
+.move-section-item:hover{background:#f0f0ee}
 
 /* 하단 버튼 */
-.bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(247,247,245,0.95); backdrop-filter: blur(10px); border-top: 1px solid #e8e8e5; padding: 10px 16px 22px; display: flex; gap: 10px; z-index: 40; }
-.btn-draft { flex: 1; padding: 12px; border: 1.5px solid #e8e8e5; border-radius: 12px; font-size: 14px; font-weight: 700; background: #fff; cursor: pointer; font-family: inherit; color: #666; }
-.btn-draft:active { background: #f0f0ee; }
-.btn-order { flex: 2; padding: 12px; border: none; border-radius: 12px; font-size: 14px; font-weight: 700; background: #d1d5db; cursor: pointer; font-family: inherit; color: #fff; transition: background 0.15s; }
-.btn-order.ready { background: #1a1a1a; }
+.bottom-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(247,247,245,0.95);backdrop-filter:blur(10px);border-top:1px solid #e8e8e5;padding:10px 16px 22px;display:flex;gap:10px;z-index:40}
+.btn-draft{flex:1;padding:13px;border:1.5px solid #e8e8e5;border-radius:12px;font-size:15px;font-weight:700;background:#fff;cursor:pointer;font-family:inherit;color:#666}
+.btn-draft:active{background:#f0f0ee}
+.btn-order{flex:2;padding:13px;border:none;border-radius:12px;font-size:15px;font-weight:700;background:#d1d5db;cursor:pointer;font-family:inherit;color:#fff;transition:background 0.15s}
+.btn-order.ready{background:#1a1a1a}
 
-/* 모달 */
-.modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 100; align-items: flex-end; justify-content: center; }
-.modal-bg.show { display: flex; }
-.modal { background: #fff; border-radius: 20px 20px 0 0; padding: 18px 18px 34px; width: 100%; max-height: 88vh; overflow-y: auto; }
-.modal-handle { width: 36px; height: 4px; background: #e0e0e0; border-radius: 2px; margin: 0 auto 16px; }
-.modal h3 { font-size: 16px; font-weight: 700; margin-bottom: 14px; }
-.modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
-.modal-btn { padding: 10px 18px; border-radius: 10px; border: 1.5px solid #e8e8e5; font-size: 14px; font-weight: 600; background: #fff; cursor: pointer; font-family: inherit; color: #1a1a1a; }
-.modal-btn.danger { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
-.modal-btn.confirm { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
-.modal-btn.confirm:disabled { background: #d1d5db; border-color: #d1d5db; cursor: not-allowed; }
-
-.order-preview-block { background: #f7f7f5; border-radius: 10px; padding: 12px; margin-bottom: 10px; border: 1px solid #e8e8e5; }
-.order-vendor-name { font-size: 12px; font-weight: 700; color: #888; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
-.order-vendor-cred { font-size: 11px; color: #aaa; background: #fff; border-radius: 6px; padding: 4px 8px; margin-bottom: 6px; border: 1px solid #f0f0ee; }
-.order-item-line { font-size: 13px; padding: 2px 0; }
-.tag-sms { font-size: 10px; padding: 1px 6px; border-radius: 4px; background: #dcfce7; color: #16a34a; font-weight: 600; }
-.tag-nosms { font-size: 10px; padding: 1px 6px; border-radius: 4px; background: #f0f0ee; color: #999; font-weight: 600; }
-.send-status { padding: 10px 14px; border-radius: 9px; font-size: 13px; margin-top: 10px; }
-.send-ok  { background: #dcfce7; color: #16a34a; }
-.send-err { background: #fee2e2; color: #dc2626; }
-
-/* 검색 하이라이트 */
-@keyframes pulse-highlight {
-  0%   { box-shadow: 0 0 0 0 rgba(245,158,11,0.4); }
-  70%  { box-shadow: 0 0 0 8px rgba(245,158,11,0); }
-  100% { box-shadow: 0 0 0 0 rgba(245,158,11,0); }
-}
-.item-card.highlighted { animation: pulse-highlight 1s ease-out; }
+@keyframes pulse-highlight{0%{box-shadow:0 0 0 0 rgba(245,158,11,0.4)}70%{box-shadow:0 0 0 8px rgba(245,158,11,0)}100%{box-shadow:0 0 0 0 rgba(245,158,11,0)}}
+.item-card.highlighted{animation:pulse-highlight 1s ease-out}
 </style>
 </head>
 <body>
@@ -235,10 +257,23 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Apple 
   <div class="modal">
     <div class="modal-handle"></div>
     <h3>품목 삭제</h3>
-    <p style="font-size:13px;color:#666;line-height:1.6" id="deleteMsg"></p>
+    <p style="font-size:14px;color:#666;line-height:1.6" id="deleteMsg"></p>
     <div class="modal-actions">
       <button class="modal-btn" onclick="closeModal('deleteModal')">취소</button>
       <button class="modal-btn danger" onclick="confirmDelete()">삭제</button>
+    </div>
+  </div>
+</div>
+
+<!-- 업체 삭제 확인 모달 -->
+<div class="modal-bg" id="vendorDeleteModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3>업체 삭제</h3>
+    <p style="font-size:14px;color:#666;line-height:1.6" id="vendorDeleteMsg"></p>
+    <div class="modal-actions">
+      <button class="modal-btn" onclick="closeModal('vendorDeleteModal')">취소</button>
+      <button class="modal-btn danger" onclick="confirmVendorDelete()">삭제</button>
     </div>
   </div>
 </div>
@@ -261,7 +296,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Apple 
   <div class="modal">
     <div class="modal-handle"></div>
     <h3>발주 확정</h3>
-    <p style="font-size:12px;color:#888;margin-bottom:12px">수량이 입력된 품목으로 업체별 문자 발송</p>
+    <p style="font-size:13px;color:#888;margin-bottom:12px">수량이 입력된 품목으로 업체별 문자 발송</p>
     <div id="orderPreview"></div>
     <div id="sendStatus"></div>
     <div class="modal-actions">
@@ -276,7 +311,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Apple 
   <div class="modal">
     <div class="modal-handle"></div>
     <h3>문자 설정 변경</h3>
-    <p style="font-size:13px;color:#666;line-height:1.6" id="smsConfirmMsg"></p>
+    <p style="font-size:14px;color:#666;line-height:1.6" id="smsConfirmMsg"></p>
     <div class="modal-actions">
       <button class="modal-btn" onclick="closeModal('smsConfirmModal')">취소</button>
       <button class="modal-btn confirm" onclick="confirmSmsToggle()">변경</button>
@@ -284,528 +319,789 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Apple 
   </div>
 </div>
 
+<!-- 카테고리 이동 모달 -->
+<div class="modal-bg" id="moveCatModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3>카테고리 이동</h3>
+    <p style="font-size:13px;color:#888;margin-bottom:12px" id="moveCatItemName"></p>
+    <div id="moveCatList"></div>
+    <div class="modal-actions">
+      <button class="modal-btn" onclick="closeModal('moveCatModal')">취소</button>
+    </div>
+  </div>
+</div>
+
+<!-- 섹션 이동 모달 -->
+<div class="modal-bg" id="moveSectionModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3>섹션 이동</h3>
+    <p style="font-size:13px;color:#888;margin-bottom:12px" id="moveSectionItemName"></p>
+    <div id="moveSectionList"></div>
+    <div class="modal-actions">
+      <button class="modal-btn" onclick="closeModal('moveSectionModal')">취소</button>
+    </div>
+  </div>
+</div>
+
+<!-- 번역 로딩 -->
+<div class="modal-bg" id="translateModal">
+  <div class="modal" style="padding-bottom:20px">
+    <div class="modal-handle"></div>
+    <h3>번역 중...</h3>
+    <p style="font-size:14px;color:#888" id="translateStatus">품목명을 번역하고 있습니다</p>
+  </div>
+</div>
+
 <script>
-// ── GAS URL 하드코딩 ──
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzmdAm9Yeo0Ao8G2NJZjCahoOUw11PIpnROWHQHz3mf1FYUuKKBKNRjJUXJ4dgjNcVe/exec';
 const UNITS = ['개','봉','병','단','망','kg','g','박스','팩','판','통','장','묶음','포','마리'];
 
-// ── 카테고리 공식 정의 ──
-const CAT_FORMULA = {
-  seafood:    '요일별 평균 × 0.6 + 최근 7일 평균 × 0.4 (월요일 휴무 반영)',
-  ingredient: '마지막 발주일 기준 D-Day 표시 · 발주 주기 기반',
-  alcohol:    '마지막 발주일 기준 D-Day 표시 · 발주 주기 기반',
-  packaging:  '마지막 발주일 기준 D-Day 표시 · 발주 주기 기반',
-  etc:        '마지막 발주일 기준 D-Day 표시 · 발주 주기 기반',
-  welfare:    '마지막 발주일 기준 D-Day 표시 · 발주 주기 기반',
-};
-
-// ── 식자재 구역 정의 (매장 위치 기준) ──
 const INGREDIENT_ZONES = [
-  // 냉동고: 노바시, 홍합, 오징어, 알새우, 버터, 감자샐러드, 치즈, 날치알, 소고기, 가리비
-  { id: 'z_freezer',  name: '❄️ 냉동고',   items: ['i1','i2','i3','i4','i5','i6','i7','i8','i9','i10'] },
-  // 오로시(오로시 작업대): 천사채, 유자폰즈, 튀김가루, 부침가루, 다시마, 나베소스, 키친타올, 해동지
-  { id: 'z_oroshi',   name: '🔪 오로시',   items: ['i11','i12','i13','i14','i16','i17','i18','i19'] },
-  // 숙성고: 트러플, 무순, 아귀간
-  { id: 'z_aging',    name: '🧊 숙성고',   items: ['i15','i20','i21'] },
-  // 간택기(건식 양념 선반): 참기름, 후추, 미원, 고춧가루, 건고추, 가쓰오부시, 참깨, 식용유
-  { id: 'z_pantry',   name: '🫙 간택기',   items: ['i22','i23','i24','i25','i26','i27','i28','i29'] },
-  // 야채냉(야채 냉장고): 무순, 대파, 쪽파, 오이, 깻잎, 꽃상추, 숙주, 양상추, 마늘, 땡초, 부추
-  { id: 'z_vegfridge','name': '🥬 야채냉',  items: ['i30','i31','i32','i33','i34','i35','i36','i37','i38','i39'] },
-  // 앵글(건식 선반): 김치, 양파, 고구마, 쌀, 찹쌀, 설탕
-  { id: 'z_shelf',    name: '📦 앵글',     items: ['i40','i41','i42','i43','i44','i45'] },
-  // 쇼케이스: 무, 알배추, 레몬, 당근, 와사비, 락교, 초생강, 단무지, 간장
-  { id: 'z_showcase', name: '🍱 쇼케이스', items: ['i46','i47','i48','i49','i50','i51','i52','i53','i54'] },
+  {id:'z_freezer', name:'❄️ 냉동고',   items:['i1','i2','i3','i4','i5','i6','i7','i8','i9','i10']},
+  {id:'z_oroshi',  name:'🔪 오로시',   items:['i11','i12','i13','i14','i16','i17','i18','i19']},
+  {id:'z_aging',   name:'🧊 숙성고',   items:['i15','i20','i21']},
+  {id:'z_pantry',  name:'🫙 간택기',   items:['i22','i23','i24','i25','i26','i27','i28','i29']},
+  {id:'z_vegfridge',name:'🥬 야채냉',  items:['i30','i31','i32','i33','i34','i35','i36','i37','i38','i39']},
+  {id:'z_shelf',   name:'📦 앵글',     items:['i40','i41','i42','i43','i44','i45']},
+  {id:'z_showcase',name:'🍱 쇼케이스', items:['i46','i47','i48','i49','i50','i51','i52','i53','i54']},
 ];
 
 const DEFAULT_DATA = {
-  managers: { phone1: '', phone1name: '관리자1', phone2: '', phone2name: '관리자2' },
-  vendors: [
-    {name:'식자재업체', sms:true, contact:'', link:'', vid:'', pw:''},
-    {name:'쿠팡',       sms:true, contact:'', link:'https://www.coupang.com', vid:'', pw:''},
-    {name:'총판',       sms:true, contact:'', link:'', vid:'', pw:''},
-    {name:'수산업체',   sms:true, contact:'', link:'', vid:'', pw:''},
-    {name:'국내주류업체',sms:true,contact:'', link:'', vid:'', pw:''},
-    {name:'수입주류업체',sms:true,contact:'', link:'', vid:'', pw:''},
-    {name:'포장재업체', sms:true, contact:'', link:'', vid:'', pw:''},
-    {name:'기타',       sms:false,contact:'', link:'', vid:'', pw:''},
+  managers:{phone1:'',phone1name:'관리자1',phone2:'',phone2name:'관리자2'},
+  vendors:[
+    {name:'식자재업체',sms:true,contact:'',link:'',vid:'',pw:'',suffix:''},
+    {name:'쿠팡',sms:true,contact:'',link:'https://www.coupang.com',vid:'',pw:'',suffix:''},
+    {name:'총판',sms:true,contact:'',link:'',vid:'',pw:'',suffix:''},
+    {name:'수산업체',sms:true,contact:'',link:'',vid:'',pw:'',suffix:'주문하겠습니다~'},
+    {name:'국내주류업체',sms:true,contact:'',link:'',vid:'',pw:'',suffix:'주문하겠습니다.'},
+    {name:'수입주류업체',sms:true,contact:'',link:'',vid:'',pw:'',suffix:'주문하겠습니다.'},
+    {name:'포장재업체',sms:true,contact:'',link:'',vid:'',pw:'',suffix:''},
+    {name:'기타',sms:false,contact:'',link:'',vid:'',pw:'',suffix:''},
   ],
-  categories: [
-    {id:'seafood',   name:'수산',   emoji:'🐟', items:[
-      {id:'s1',name:'광어',   vendor:'수산업체',unit:'마리',cycle:1,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'s2',name:'우럭',   vendor:'수산업체',unit:'마리',cycle:1,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'s3',name:'참돔',   vendor:'수산업체',unit:'마리',cycle:1,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'s4',name:'방어',   vendor:'수산업체',unit:'마리',cycle:1,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'s5',name:'감성돔', vendor:'수산업체',unit:'마리',cycle:1,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
+  categories:[
+    {id:'seafood',name:'수산',emoji:'🐟',items:[
+      {id:'s1',name:'광어',vendor:'수산업체',unit:'마리',cycle:1,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'s2',name:'우럭',vendor:'수산업체',unit:'마리',cycle:1,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'s3',name:'참돔',vendor:'수산업체',unit:'마리',cycle:1,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'s4',name:'방어',vendor:'수산업체',unit:'마리',cycle:1,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'s5',name:'감성돔',vendor:'수산업체',unit:'마리',cycle:1,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
     ]},
     {id:'ingredient',name:'식자재',emoji:'🥬',items:[
-      {id:'i1', name:'노바시 40미',    vendor:'식자재업체',unit:'개',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i2', name:'홍합 1kg',       vendor:'식자재업체',unit:'봉',cycle:7, lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i3', name:'오징어 다이스',  vendor:'식자재업체',unit:'봉',cycle:10,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i4', name:'알새우 500g',    vendor:'식자재업체',unit:'봉',cycle:10,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i5', name:'버터 454g',      vendor:'식자재업체',unit:'개',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i6', name:'감자샐러드 1kg', vendor:'식자재업체',unit:'봉',cycle:10,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i7', name:'치즈 2.5kg',     vendor:'식자재업체',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i8', name:'날치알 800g',    vendor:'식자재업체',unit:'개',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i9', name:'소고기',         vendor:'식자재업체',unit:'봉',cycle:7, lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i10',name:'가리비',         vendor:'쿠팡',      unit:'판',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i11',name:'천사채 1kg',     vendor:'쿠팡',      unit:'봉',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i12',name:'유자폰즈 270g',  vendor:'식자재업체',unit:'병',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i13',name:'튀김가루 1kg',   vendor:'쿠팡',      unit:'봉',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i14',name:'부침가루 1kg',   vendor:'쿠팡',      unit:'봉',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i15',name:'트러플 100g',    vendor:'쿠팡',      unit:'병',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i16',name:'다시마 파지',    vendor:'쿠팡',      unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i17',name:'나베소스 1L',    vendor:'총판',      unit:'병',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i18',name:'키친타올',       vendor:'쿠팡',      unit:'봉',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i19',name:'해동지',         vendor:'쿠팡',      unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i20',name:'무순',           vendor:'식자재업체',unit:'단',cycle:7, lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i21',name:'아귀간 250g',    vendor:'쿠팡',      unit:'개',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i22',name:'참기름 1.8L',    vendor:'식자재업체',unit:'병',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i23',name:'후추 1kg',       vendor:'식자재업체',unit:'봉',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i24',name:'미원',           vendor:'식자재업체',unit:'봉',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i25',name:'고춧가루',       vendor:'식자재업체',unit:'봉',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i26',name:'건고추 1kg',     vendor:'식자재업체',unit:'봉',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i27',name:'가쓰오부시',     vendor:'쿠팡',      unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i28',name:'참깨',           vendor:'식자재업체',unit:'봉',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i29',name:'식용유',         vendor:'식자재업체',unit:'통',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i30',name:'대파',           vendor:'식자재업체',unit:'단',cycle:5, lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i31',name:'쪽파',           vendor:'식자재업체',unit:'단',cycle:5, lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i32',name:'오이',           vendor:'식자재업체',unit:'개',cycle:5, lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i33',name:'깻잎',           vendor:'식자재업체',unit:'단',cycle:5, lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i34',name:'꽃상추',         vendor:'식자재업체',unit:'단',cycle:5, lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i35',name:'숙주',           vendor:'식자재업체',unit:'봉',cycle:5, lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i36',name:'양상추',         vendor:'식자재업체',unit:'통',cycle:5, lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i37',name:'마늘',           vendor:'식자재업체',unit:'망',cycle:7, lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i38',name:'땡초',           vendor:'식자재업체',unit:'봉',cycle:5, lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i39',name:'부추',           vendor:'식자재업체',unit:'단',cycle:5, lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i40',name:'김치',           vendor:'식자재업체',unit:'통',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i41',name:'양파',           vendor:'식자재업체',unit:'망',cycle:10,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i42',name:'고구마',         vendor:'식자재업체',unit:'망',cycle:10,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i43',name:'쌀 20kg',        vendor:'식자재업체',unit:'포',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i44',name:'찹쌀',           vendor:'식자재업체',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i45',name:'설탕',           vendor:'식자재업체',unit:'봉',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i46',name:'무',             vendor:'식자재업체',unit:'개',cycle:7, lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i47',name:'알배추',         vendor:'식자재업체',unit:'통',cycle:7, lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i48',name:'레몬',           vendor:'식자재업체',unit:'개',cycle:7, lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i49',name:'당근',           vendor:'식자재업체',unit:'개',cycle:10,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i50',name:'와사비 750g',    vendor:'식자재업체',unit:'개',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i51',name:'락교 3kg',       vendor:'식자재업체',unit:'통',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i52',name:'초생강',         vendor:'식자재업체',unit:'봉',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i53',name:'단무지 2kg',     vendor:'식자재업체',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'i54',name:'니비시 간장 1.5L',vendor:'식자재업체',unit:'병',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-    ]},
-    {id:'alcohol',  name:'주류',   emoji:'🍺',items:[
-      {id:'d1', name:'카스',            vendor:'국내주류업체',unit:'박스',cycle:7, lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'d2', name:'테라',            vendor:'국내주류업체',unit:'박스',cycle:7, lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'d3', name:'진로',            vendor:'국내주류업체',unit:'박스',cycle:7, lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'d4', name:'대선',            vendor:'국내주류업체',unit:'박스',cycle:7, lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'d5', name:'좋은데이',        vendor:'국내주류업체',unit:'박스',cycle:7, lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'d6', name:'참이슬',          vendor:'국내주류업체',unit:'박스',cycle:7, lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'d7', name:'새로',            vendor:'국내주류업체',unit:'박스',cycle:10,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'d8', name:'청하',            vendor:'국내주류업체',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'d9', name:'화요 17',         vendor:'국내주류업체',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'d10',name:'화요 25',         vendor:'국내주류업체',unit:'박스',cycle:10,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'d11',name:'일품진로 25',     vendor:'국내주류업체',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'d12',name:'일품진로오크 25', vendor:'국내주류업체',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'d13',name:'별빛청하',        vendor:'국내주류업체',unit:'박스',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'im1',name:'준마이 750',      vendor:'수입주류업체',unit:'병',  cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'im2',name:'러시안잭',        vendor:'수입주류업체',unit:'병',  cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'im3',name:'간바레오또상',    vendor:'수입주류업체',unit:'팩',  cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'im4',name:'닷사이 45',       vendor:'수입주류업체',unit:'병',  cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'im5',name:'잭다니엘 허니',   vendor:'수입주류업체',unit:'병',  cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'im6',name:'파이어볼',        vendor:'수입주류업체',unit:'병',  cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'im7',name:'다카시미즈',      vendor:'수입주류업체',unit:'병',  cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'im8',name:'머드하우스',      vendor:'수입주류업체',unit:'병',  cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'im9',name:'컵사케 고래',     vendor:'수입주류업체',unit:'박스',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'o5', name:'진로토닉',        vendor:'국내주류업체',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'o6', name:'스프라이트',      vendor:'국내주류업체',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'o7', name:'코카콜라',        vendor:'국내주류업체',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
+      {id:'i1',name:'노바시 40미',vendor:'식자재업체',unit:'개',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i2',name:'홍합 1kg',vendor:'식자재업체',unit:'봉',cycle:7,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i3',name:'오징어 다이스',vendor:'식자재업체',unit:'봉',cycle:10,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i4',name:'알새우 500g',vendor:'식자재업체',unit:'봉',cycle:10,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i5',name:'버터 454g',vendor:'식자재업체',unit:'개',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i6',name:'감자샐러드 1kg',vendor:'식자재업체',unit:'봉',cycle:10,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i7',name:'치즈 2.5kg',vendor:'식자재업체',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i8',name:'날치알 800g',vendor:'식자재업체',unit:'개',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i9',name:'소고기',vendor:'식자재업체',unit:'봉',cycle:7,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i10',name:'가리비',vendor:'쿠팡',unit:'판',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i11',name:'천사채 1kg',vendor:'쿠팡',unit:'봉',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i12',name:'유자폰즈 270g',vendor:'식자재업체',unit:'병',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i13',name:'튀김가루 1kg',vendor:'쿠팡',unit:'봉',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i14',name:'부침가루 1kg',vendor:'쿠팡',unit:'봉',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i15',name:'트러플 100g',vendor:'쿠팡',unit:'병',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i16',name:'다시마 파지',vendor:'쿠팡',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i17',name:'나베소스 1L',vendor:'총판',unit:'병',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i18',name:'키친타올',vendor:'쿠팡',unit:'봉',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i19',name:'해동지',vendor:'쿠팡',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i20',name:'무순',vendor:'식자재업체',unit:'단',cycle:7,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i21',name:'아귀간 250g',vendor:'쿠팡',unit:'개',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i22',name:'참기름 1.8L',vendor:'식자재업체',unit:'병',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i23',name:'후추 1kg',vendor:'식자재업체',unit:'봉',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i24',name:'미원',vendor:'식자재업체',unit:'봉',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i25',name:'고춧가루',vendor:'식자재업체',unit:'봉',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i26',name:'건고추 1kg',vendor:'식자재업체',unit:'봉',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i27',name:'가쓰오부시',vendor:'쿠팡',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i28',name:'참깨',vendor:'식자재업체',unit:'봉',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i29',name:'식용유',vendor:'식자재업체',unit:'통',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i30',name:'대파',vendor:'식자재업체',unit:'단',cycle:5,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i31',name:'쪽파',vendor:'식자재업체',unit:'단',cycle:5,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i32',name:'오이',vendor:'식자재업체',unit:'개',cycle:5,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i33',name:'깻잎',vendor:'식자재업체',unit:'단',cycle:5,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i34',name:'꽃상추',vendor:'식자재업체',unit:'단',cycle:5,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i35',name:'숙주',vendor:'식자재업체',unit:'봉',cycle:5,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i36',name:'양상추',vendor:'식자재업체',unit:'통',cycle:5,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i37',name:'마늘',vendor:'식자재업체',unit:'망',cycle:7,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i38',name:'땡초',vendor:'식자재업체',unit:'봉',cycle:5,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i39',name:'부추',vendor:'식자재업체',unit:'단',cycle:5,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i40',name:'김치',vendor:'식자재업체',unit:'통',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i41',name:'양파',vendor:'식자재업체',unit:'망',cycle:10,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i42',name:'고구마',vendor:'식자재업체',unit:'망',cycle:10,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i43',name:'쌀 20kg',vendor:'식자재업체',unit:'포',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i44',name:'찹쌀',vendor:'식자재업체',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i45',name:'설탕',vendor:'식자재업체',unit:'봉',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i46',name:'무',vendor:'식자재업체',unit:'개',cycle:7,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i47',name:'알배추',vendor:'식자재업체',unit:'통',cycle:7,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i48',name:'레몬',vendor:'식자재업체',unit:'개',cycle:7,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i49',name:'당근',vendor:'식자재업체',unit:'개',cycle:10,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i50',name:'와사비 750g',vendor:'식자재업체',unit:'개',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i51',name:'락교 3kg',vendor:'식자재업체',unit:'통',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i52',name:'초생강',vendor:'식자재업체',unit:'봉',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i53',name:'단무지 2kg',vendor:'식자재업체',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'i54',name:'니비시 간장 1.5L',vendor:'식자재업체',unit:'병',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
     ]},
     {id:'packaging',name:'포장재',emoji:'📦',items:[
-      {id:'p1', name:'회 용기/뚜껑',     vendor:'포장재업체',unit:'봉',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'p2', name:'기본찬 용기/뚜껑', vendor:'포장재업체',unit:'봉',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'p3', name:'튀김/전 일체형',   vendor:'포장재업체',unit:'봉',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'p4', name:'물회 용기/뚜껑',   vendor:'포장재업체',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'p5', name:'직사각 세트',      vendor:'포장재업체',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'p6', name:'해물 일체형',      vendor:'포장재업체',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'p7', name:'초밥 용기/뚜껑',   vendor:'포장재업체',unit:'봉',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'p8', name:'종이컵/소주컵',    vendor:'포장재업체',unit:'봉',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'p9', name:'대나무젓가락',     vendor:'포장재업체',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'p10',name:'쌈채소비닐',       vendor:'포장재업체',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'p11',name:'배달비닐',         vendor:'포장재업체',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'p12',name:'냅킨',             vendor:'포장재업체',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'p13',name:'랩 350mm',         vendor:'쿠팡',      unit:'개',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
+      {id:'p1',name:'회 용기/뚜껑',vendor:'포장재업체',unit:'봉',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'p2',name:'기본찬 용기/뚜껑',vendor:'포장재업체',unit:'봉',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'p3',name:'튀김/전 일체형',vendor:'포장재업체',unit:'봉',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'p4',name:'물회 용기/뚜껑',vendor:'포장재업체',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'p5',name:'직사각 세트',vendor:'포장재업체',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'p6',name:'해물 일체형',vendor:'포장재업체',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'p7',name:'초밥 용기/뚜껑',vendor:'포장재업체',unit:'봉',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'p8',name:'종이컵/소주컵',vendor:'포장재업체',unit:'봉',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'p9',name:'대나무젓가락',vendor:'포장재업체',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'p10',name:'쌈채소비닐',vendor:'포장재업체',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'p11',name:'배달비닐',vendor:'포장재업체',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'p12',name:'냅킨',vendor:'포장재업체',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'p13',name:'랩 350mm',vendor:'쿠팡',unit:'개',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
     ]},
-    {id:'etc',     name:'기타',   emoji:'🧹',items:[
-      {id:'o1',name:'가루세제', vendor:'쿠팡',      unit:'개',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'o2',name:'퐁퐁',     vendor:'식자재업체',unit:'개',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'o3',name:'물티슈',   vendor:'쿠팡',      unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'o4',name:'위생장갑', vendor:'쿠팡',      unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
+    {id:'alcohol',name:'주류',emoji:'🍺',items:[
+      {id:'d1',name:'카스',vendor:'국내주류업체',unit:'박스',cycle:7,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'d2',name:'테라',vendor:'국내주류업체',unit:'박스',cycle:7,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'d3',name:'진로',vendor:'국내주류업체',unit:'박스',cycle:7,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'d4',name:'대선',vendor:'국내주류업체',unit:'박스',cycle:7,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'d5',name:'좋은데이',vendor:'국내주류업체',unit:'박스',cycle:7,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'d6',name:'참이슬',vendor:'국내주류업체',unit:'박스',cycle:7,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'d7',name:'새로',vendor:'국내주류업체',unit:'박스',cycle:10,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'d8',name:'청하',vendor:'국내주류업체',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'d9',name:'화요 17',vendor:'국내주류업체',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'d10',name:'화요 25',vendor:'국내주류업체',unit:'박스',cycle:10,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'d11',name:'일품진로 25',vendor:'국내주류업체',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'d12',name:'일품진로오크 25',vendor:'국내주류업체',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'d13',name:'별빛청하',vendor:'국내주류업체',unit:'박스',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'im1',name:'준마이 750',vendor:'수입주류업체',unit:'병',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'im2',name:'러시안잭',vendor:'수입주류업체',unit:'병',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'im3',name:'간바레오또상',vendor:'수입주류업체',unit:'팩',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'im4',name:'닷사이 45',vendor:'수입주류업체',unit:'병',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'im5',name:'잭다니엘 허니',vendor:'수입주류업체',unit:'병',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'im6',name:'파이어볼',vendor:'수입주류업체',unit:'병',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'im7',name:'다카시미즈',vendor:'수입주류업체',unit:'병',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'im8',name:'머드하우스',vendor:'수입주류업체',unit:'병',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'im9',name:'컵사케 고래',vendor:'수입주류업체',unit:'박스',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'o5',name:'진로토닉',vendor:'국내주류업체',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'o6',name:'스프라이트',vendor:'국내주류업체',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'o7',name:'코카콜라',vendor:'국내주류업체',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
     ]},
-    {id:'welfare', name:'복지',   emoji:'🎁',items:[
-      {id:'w1', name:'마이밀 오리지널',vendor:'쿠팡',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'w2', name:'마이밀 초코',    vendor:'쿠팡',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'w3', name:'마이밀 딸기',    vendor:'쿠팡',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'w4', name:'간식 (과자류)', vendor:'쿠팡',unit:'봉',  cycle:7, lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'w5', name:'컵라면',         vendor:'쿠팡',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'w6', name:'에너지드링크',   vendor:'쿠팡',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'w7', name:'커피믹스',       vendor:'쿠팡',unit:'박스',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
-      {id:'w8', name:'생수',           vendor:'쿠팡',unit:'박스',cycle:7, lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false},
+    {id:'etc',name:'기타',emoji:'🧹',items:[
+      {id:'o1',name:'가루세제',vendor:'쿠팡',unit:'개',cycle:30,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'o2',name:'퐁퐁',vendor:'식자재업체',unit:'개',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'o3',name:'물티슈',vendor:'쿠팡',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'o4',name:'위생장갑',vendor:'쿠팡',unit:'봉',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+    ]},
+    {id:'welfare',name:'복지',emoji:'🎁',items:[
+      {id:'w1',name:'마이밀 오리지널',vendor:'쿠팡',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'w2',name:'마이밀 초코',vendor:'쿠팡',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'w3',name:'마이밀 딸기',vendor:'쿠팡',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'w4',name:'간식 (과자류)',vendor:'쿠팡',unit:'봉',cycle:7,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'w5',name:'컵라면',vendor:'쿠팡',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'w6',name:'에너지드링크',vendor:'쿠팡',unit:'박스',cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'w7',name:'커피믹스',vendor:'쿠팡',unit:'박스',cycle:21,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
+      {id:'w8',name:'생수',vendor:'쿠팡',unit:'박스',cycle:7,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}},
     ]},
   ]
 };
 
 // ── IndexedDB 이미지 저장 ──
 let imgDB = null;
-function openImgDB() {
-  return new Promise((res, rej) => {
-    const req = indexedDB.open('jungbada_imgs', 1);
-    req.onupgradeneeded = e => e.target.result.createObjectStore('images');
-    req.onsuccess = e => { imgDB = e.target.result; res(imgDB); };
-    req.onerror = () => rej();
-  });
-}
-async function saveImg(id, data) {
-  const db = imgDB || await openImgDB();
-  return new Promise(res => {
-    const tx = db.transaction('images', 'readwrite');
-    tx.objectStore('images').put(data, id);
-    tx.oncomplete = () => res();
-  });
-}
-async function loadImg(id) {
-  const db = imgDB || await openImgDB();
-  return new Promise(res => {
-    const tx = db.transaction('images', 'readonly');
-    const req = tx.objectStore('images').get(id);
-    req.onsuccess = () => res(req.result || null);
-    req.onerror = () => res(null);
-  });
-}
+function openImgDB(){return new Promise((res,rej)=>{const req=indexedDB.open('jungbada_imgs',1);req.onupgradeneeded=e=>e.target.result.createObjectStore('images');req.onsuccess=e=>{imgDB=e.target.result;res(imgDB)};req.onerror=()=>rej()})}
+async function saveImg(id,data){const db=imgDB||await openImgDB();return new Promise(res=>{const tx=db.transaction('images','readwrite');tx.objectStore('images').put(data,id);tx.oncomplete=()=>res()})}
+async function loadImg(id){const db=imgDB||await openImgDB();return new Promise(res=>{const tx=db.transaction('images','readonly');const req=tx.objectStore('images').get(id);req.onsuccess=()=>res(req.result||null);req.onerror=()=>res(null)})}
 
 // ── 상태 관리 ──
 let state = loadState();
 let activeCat = state.categories[0].id;
-let pendingDel = {cat:null, item:null};
+let pendingDel = {cat:null,item:null};
+let pendingVendorDel = null;
 let pendingSmsToggle = {idx:null};
 let addModalCatId = null;
+let addModalZoneId = null;
 let selectedUnit = '개';
-let inlineEditItemId = null;
+let pendingMoveCat = {catId:null,itemId:null};
+let pendingMoveSection = {catId:null,itemId:null};
 
-function loadState() {
-  try {
-    const s = localStorage.getItem('jungbada_order_v3');
-    if (s) {
-      const p = JSON.parse(s);
-      if (!p.managers) p.managers = DEFAULT_DATA.managers;
-      p.categories.forEach(cat => {
-        cat.items.forEach(item => {
-          if (item.autoOrder === undefined) item.autoOrder = false;
-          if (item.inactive === undefined)  item.inactive  = false;
-          if (item.manualQty === undefined) item.manualQty = false;
-          if (!item.orders) item.orders = [];
+function loadState(){
+  try{
+    const s=localStorage.getItem('jungbada_order_v4');
+    if(s){
+      const p=JSON.parse(s);
+      if(!p.managers) p.managers=DEFAULT_DATA.managers;
+      p.categories.forEach(cat=>{
+        cat.items.forEach(item=>{
+          if(item.autoOrder===undefined) item.autoOrder=false;
+          if(item.inactive===undefined) item.inactive=false;
+          if(item.manualQty===undefined) item.manualQty=false;
+          if(!item.orders) item.orders=[];
+          if(!item.translations) item.translations={};
         });
       });
-      p.vendors.forEach(v => {
-        if (v.contact === undefined) v.contact = '';
-        if (v.link    === undefined) v.link    = '';
-        if (v.vid     === undefined) v.vid     = '';
-        if (v.pw      === undefined) v.pw      = '';
+      p.vendors.forEach(v=>{
+        if(v.contact===undefined) v.contact='';
+        if(v.link===undefined) v.link='';
+        if(v.vid===undefined) v.vid='';
+        if(v.pw===undefined) v.pw='';
+        if(v.suffix===undefined) v.suffix='';
       });
-      // welfare 탭 없으면 추가
-      if (!p.categories.find(c => c.id === 'welfare')) {
-        p.categories.push(DEFAULT_DATA.categories.find(c => c.id === 'welfare'));
+      // 포장재를 주류 앞으로 (14번 요청)
+      const cats = p.categories;
+      const pkgIdx = cats.findIndex(c=>c.id==='packaging');
+      const alcIdx = cats.findIndex(c=>c.id==='alcohol');
+      if(pkgIdx > alcIdx && pkgIdx !== -1 && alcIdx !== -1){
+        const [pkg] = cats.splice(pkgIdx,1);
+        cats.splice(alcIdx,0,pkg);
       }
+      // welfare 없으면 추가
+      if(!p.categories.find(c=>c.id==='welfare')) p.categories.push(DEFAULT_DATA.categories.find(c=>c.id==='welfare'));
       return p;
     }
-  } catch(e) {}
-  return JSON.parse(JSON.stringify(DEFAULT_DATA));
+  }catch(e){}
+  const d = JSON.parse(JSON.stringify(DEFAULT_DATA));
+  // 기본 데이터에서도 포장재를 주류 앞으로
+  const cats = d.categories;
+  const pkgIdx = cats.findIndex(c=>c.id==='packaging');
+  const alcIdx = cats.findIndex(c=>c.id==='alcohol');
+  if(pkgIdx > alcIdx && pkgIdx !== -1 && alcIdx !== -1){
+    const [pkg] = cats.splice(pkgIdx,1);
+    cats.splice(alcIdx,0,pkg);
+  }
+  return d;
 }
 
-function save() { localStorage.setItem('jungbada_order_v3', JSON.stringify(state)); }
-function saveDraft() {
+function save(){localStorage.setItem('jungbada_order_v4',JSON.stringify(state))}
+function saveDraft(){
   save();
   document.getElementById('draftBadge').classList.add('show');
-  const btn = document.querySelector('.btn-draft');
-  btn.textContent = '✓ 저장됨';
-  setTimeout(() => { btn.textContent = '임시 저장'; }, 1500);
+  const btn=document.querySelector('.btn-draft');
+  btn.textContent='✓ 저장됨';
+  setTimeout(()=>{btn.textContent='임시 저장'},1500);
 }
 
-function today() { return new Date().toISOString().slice(0,10); }
-function daysSince(d) { if(!d) return null; return Math.floor((new Date(today()) - new Date(d)) / 864e5); }
+function today(){return new Date().toISOString().slice(0,10)}
+function daysSince(d){if(!d)return null;return Math.floor((new Date(today())-new Date(d))/864e5)}
 
-// 수산 발주 제안 (요일별 평균 0.6 + 최근7일 평균 0.4)
-function getSeafoodSuggest(item) {
-  if (!item.orders || item.orders.length < 3) return { type: 'today', label: '첫 발주', qty: 0 };
-  const dow = new Date().getDay();
-  const sameDay = item.orders.filter(o => new Date(o).getDay() === dow);
-  const recent7 = item.orders.filter(o => daysSince(o) <= 7);
-  const sameDayAvg = sameDay.length > 0 ? sameDay.length / Math.max(1, sameDay.length) : 0;
-  const recent7Avg = recent7.length / 7;
-  const suggested = Math.round(sameDayAvg * 0.6 + recent7Avg * 0.4);
-  const ds = daysSince(item.lastOrder);
-  if (ds === null || ds >= item.cycle) return { type: 'today', label: '오늘', qty: suggested };
-  if (ds >= item.cycle - 1) return { type: 'soon', label: 'D-1', qty: suggested };
-  return { type: 'ok', label: 'D-' + (item.cycle - ds), qty: suggested };
+function getAvgQty(item){
+  if(!item.orders||item.orders.length<3) return null;
+  // 발주 이력에서 수량 데이터가 없으므로 발주 횟수 기반 placeholder
+  return null; // 추후 수량 기록 쌓이면 활성화
 }
 
-function getSuggest(item, catId) {
-  if (catId === 'seafood') return getSeafoodSuggest(item);
-  const ds = daysSince(item.lastOrder);
-  if (ds === null) return { type: 'today', label: '첫 발주', qty: 0 };
-  const rem = item.cycle - ds;
-  if (rem <= 0) return { type: 'today', label: '오늘', qty: 0 };
-  if (rem <= 3) return { type: 'soon', label: 'D-' + rem, qty: 0 };
-  return { type: 'ok', label: 'D-' + rem, qty: 0 };
+function getOrderCountAvg(item){
+  // 발주 주기 기반 예상 평균 (실제 수량 데이터 없을 경우)
+  return null;
+}
+
+function getSuggest(item, catId){
+  if(catId==='seafood'){
+    const ds=daysSince(item.lastOrder);
+    if(ds===null) return {type:'today',label:'첫 발주'};
+    if(ds>=1) return {type:'today',label:'오늘'};
+    return {type:'ok',label:'D-1'};
+  }
+  const ds=daysSince(item.lastOrder);
+  if(ds===null) return {type:'today',label:'첫 발주'};
+  const rem=item.cycle-ds;
+  if(rem<=0) return {type:'today',label:'오늘'};
+  if(rem<=3) return {type:'soon',label:'D-'+rem};
+  return {type:'ok',label:'D-'+rem};
 }
 
 // ── 탭 렌더링 ──
-function renderTabs() {
-  const bar = document.getElementById('tabBar');
-  const tabs = [...state.categories, {id:'settings', name:'설정', emoji:'⚙️'}];
-  bar.innerHTML = tabs.map(c =>
-    `<button class="tab-btn ${c.id===activeCat?'active':''}" onclick="switchTab('${c.id}')">${c.emoji||''} ${c.name}</button>`
-  ).join('');
+function renderTabs(){
+  const bar=document.getElementById('tabBar');
+  const tabs=[...state.categories,{id:'settings',name:'설정',emoji:'⚙️'}];
+  bar.innerHTML=tabs.map(c=>`<button class="tab-btn ${c.id===activeCat?'active':''}" onclick="switchTab('${c.id}')">${c.emoji||''} ${c.name}</button>`).join('');
 }
 
 // ── 콘텐츠 렌더링 ──
-function renderContent() {
-  const container = document.getElementById('mainContent');
-  container.innerHTML = '';
-
-  state.categories.forEach(cat => {
-    const div = document.createElement('div');
-    div.className = 'tab-content' + (cat.id === activeCat ? ' active' : '');
-    div.id = 'tab_' + cat.id;
-
-    // 공식 표시
-    if (CAT_FORMULA[cat.id]) {
-      const fb = document.createElement('div');
-      fb.className = 'formula-bar';
-      fb.innerHTML = `<strong>발주 제안 공식</strong> · ${CAT_FORMULA[cat.id]}`;
-      div.appendChild(fb);
-    }
-
-    const activeItems   = cat.items.filter(i => !i.inactive);
-    const inactiveItems = cat.items.filter(i => i.inactive);
-
-    // 식자재: 구역 섹션
-    if (cat.id === 'ingredient') {
-      const zoneMap = {};
-      INGREDIENT_ZONES.forEach(z => { zoneMap[z.id] = []; });
-      const unzoned = [];
-      activeItems.forEach(item => {
-        let placed = false;
-        for (const z of INGREDIENT_ZONES) {
-          if (z.items.includes(item.id)) { zoneMap[z.id].push(item); placed = true; break; }
-        }
-        if (!placed) unzoned.push(item);
+function renderContent(){
+  const container=document.getElementById('mainContent');
+  container.innerHTML='';
+  state.categories.forEach(cat=>{
+    const div=document.createElement('div');
+    div.className='tab-content'+(cat.id===activeCat?' active':'');
+    div.id='tab_'+cat.id;
+    const activeItems=cat.items.filter(i=>!i.inactive);
+    const inactiveItems=cat.items.filter(i=>i.inactive);
+    if(cat.id==='ingredient'){
+      const zoneMap={};
+      INGREDIENT_ZONES.forEach(z=>{zoneMap[z.id]=[]});
+      const unzoned=[];
+      activeItems.forEach(item=>{
+        let placed=false;
+        for(const z of INGREDIENT_ZONES){if(z.items.includes(item.id)){zoneMap[z.id].push(item);placed=true;break}}
+        if(!placed) unzoned.push(item);
       });
-      INGREDIENT_ZONES.forEach(zone => {
-        const zItems = zoneMap[zone.id];
-        if (zItems.length === 0) return;
-        const zSec = document.createElement('div');
-        zSec.className = 'zone-section';
-        zSec.innerHTML = `<div class="zone-header"><span class="zone-title">${zone.name}</span><span class="zone-count">${zItems.length}개</span></div>`;
-        const g = document.createElement('div');
-        g.className = 'card-grid';
-        zItems.forEach((item, idx) => g.appendChild(createItemCard(cat.id, item, idx, zItems.length)));
-        zSec.appendChild(g);
-        div.appendChild(zSec);
+      INGREDIENT_ZONES.forEach(zone=>{
+        const zItems=zoneMap[zone.id];
+        if(!zItems.length) return;
+        div.appendChild(buildZoneSection(cat.id,zone.id,zone.name,zItems,true));
       });
-      if (unzoned.length > 0) {
-        const zSec = document.createElement('div');
-        zSec.className = 'zone-section';
-        zSec.innerHTML = '<div class="zone-header"><span class="zone-title">📌 기타</span></div>';
-        const g = document.createElement('div');
-        g.className = 'card-grid';
-        unzoned.forEach((item, idx) => g.appendChild(createItemCard(cat.id, item, idx, unzoned.length)));
-        zSec.appendChild(g);
-        div.appendChild(zSec);
+      if(unzoned.length>0){
+        div.appendChild(buildZoneSection(cat.id,'z_extra','📌 기타',unzoned,true));
       }
     } else {
-      const grid = document.createElement('div');
-      grid.className = 'card-grid';
-      activeItems.forEach((item, idx) => grid.appendChild(createItemCard(cat.id, item, idx, activeItems.length)));
+      const grid=document.createElement('div');
+      grid.className='card-grid';
+      activeItems.forEach((item,idx)=>grid.appendChild(createItemCard(cat.id,item,idx,activeItems.length)));
       div.appendChild(grid);
+      const addRow=document.createElement('div');
+      addRow.className='add-item-row';
+      addRow.innerHTML=`<button class="add-item-btn" onclick="openAddModal('${cat.id}',null)">+ 품목 추가</button>`;
+      div.appendChild(addRow);
     }
-
-    // 미사용 섹션
-    if (inactiveItems.length > 0) {
-      const sec = document.createElement('div');
-      sec.className = 'inactive-section';
-      const isOpen = cat.inactiveOpen || false;
-      sec.innerHTML = `
-        <button class="inactive-toggle" onclick="toggleInactiveSection('${cat.id}')">
-          <span class="inactive-toggle-label">🚫 미사용 ${inactiveItems.length}개</span>
-          <span class="inactive-chevron ${isOpen?'open':''}" id="inactiveChevron_${cat.id}">▼</span>
-        </button>
-        <div class="inactive-grid ${isOpen?'open':''}" id="inactiveGrid_${cat.id}"></div>`;
+    if(inactiveItems.length>0){
+      const sec=document.createElement('div');
+      sec.className='inactive-section';
+      const isOpen=cat.inactiveOpen||false;
+      sec.innerHTML=`<button class="inactive-toggle" onclick="toggleInactiveSection('${cat.id}')"><span class="inactive-toggle-label">🚫 미사용 ${inactiveItems.length}개</span><span class="inactive-chevron ${isOpen?'open':''}" id="inactiveChevron_${cat.id}">▼</span></button><div class="inactive-grid ${isOpen?'open':''}" id="inactiveGrid_${cat.id}"></div>`;
       div.appendChild(sec);
-      setTimeout(() => {
-        const g = document.getElementById('inactiveGrid_' + cat.id);
-        if (g) inactiveItems.forEach((item,idx) => g.appendChild(createItemCard(cat.id, item, idx, inactiveItems.length, true)));
-      }, 0);
+      setTimeout(()=>{
+        const g=document.getElementById('inactiveGrid_'+cat.id);
+        if(g) inactiveItems.forEach((item,idx)=>g.appendChild(createItemCard(cat.id,item,idx,inactiveItems.length,true)));
+      },0);
     }
-
-    const addRow = document.createElement('div');
-    addRow.className = 'add-item-row';
-    addRow.innerHTML = `<button class="add-item-btn" onclick="openAddModal('${cat.id}')">+ 품목 추가</button>`;
-    div.appendChild(addRow);
     container.appendChild(div);
   });
-
   // 설정 탭
-  const settingsDiv = document.createElement('div');
-  settingsDiv.className = 'tab-content' + (activeCat === 'settings' ? ' active' : '');
-  settingsDiv.id = 'tab_settings';
-  settingsDiv.innerHTML = renderSettingsHTML();
+  const settingsDiv=document.createElement('div');
+  settingsDiv.className='tab-content'+(activeCat==='settings'?' active':'');
+  settingsDiv.id='tab_settings';
+  settingsDiv.innerHTML=renderSettingsHTML();
   container.appendChild(settingsDiv);
-
   updateOrderBtn();
   renderAllImages();
 }
 
+function buildZoneSection(catId, zoneId, zoneName, items, showAdd){
+  const sec=document.createElement('div');
+  sec.className='zone-section';
+  sec.id='zone_'+zoneId;
+  const header=document.createElement('div');
+  header.className='zone-header';
+  header.innerHTML=`
+    <div class="zone-title-wrap">
+      <span class="zone-title" id="zoneTitle_${zoneId}" onclick="startEditZone('${zoneId}','${zoneName}')">${zoneName}</span>
+      <input class="zone-title-input" id="zoneTitleInput_${zoneId}" value="${zoneName}" onblur="cancelEditZone('${zoneId}')" onkeydown="if(event.key==='Enter')saveZoneName('${catId}','${zoneId}')">
+      <button class="zone-save-btn" id="zoneSaveBtn_${zoneId}" onclick="saveZoneName('${catId}','${zoneId}')">저장</button>
+    </div>
+    <span class="zone-count">${items.length}개</span>`;
+  sec.appendChild(header);
+  const grid=document.createElement('div');
+  grid.className='card-grid';
+  grid.id='grid_'+zoneId;
+  items.forEach((item,idx)=>grid.appendChild(createItemCard(catId,item,idx,items.length)));
+  sec.appendChild(grid);
+  if(showAdd){
+    const addRow=document.createElement('div');
+    addRow.className='add-item-row';
+    addRow.style.marginTop='8px';
+    addRow.innerHTML=`<button class="add-item-btn" onclick="openAddModal('${catId}','${zoneId}')">+ ${zoneName} 품목 추가</button>`;
+    sec.appendChild(addRow);
+  }
+  return sec;
+}
+
 // ── 카드 생성 ──
-function createItemCard(catId, item, idx, total, isInactive = false) {
-  const card = document.createElement('div');
-  card.className = 'item-card' + (isInactive ? ' inactive' : '');
-  card.id = 'card_' + item.id;
+function createItemCard(catId, item, idx, total, isInactive=false){
+  const card=document.createElement('div');
+  card.className='item-card'+(isInactive?' inactive':'');
+  card.id='card_'+item.id;
+  const s=getSuggest(item,catId);
+  const ddayClass={today:'dday-today',soon:'dday-soon',ok:'dday-ok'}[s.type]||'dday-first';
+  const displayQty=item.qty;
+  let valClass='step-val';
+  if(displayQty>0) valClass=item.autoOrder?'step-val is-auto':'step-val is-manual';
+  const tr=item.translations||{};
+  const trText=tr.en||tr.ne?`${tr.en||''}${tr.en&&tr.ne?' / ':''}${tr.ne||''}`:'';
 
-  const s = getSuggest(item, catId);
-  const ddayClass = {today:'dday-today', soon:'dday-soon', ok:'dday-ok'}[s.type] || 'dday-first';
-
-  const isManual = item.manualQty;
-  const isAutoConfirmed = item.autoOrder && s.qty > 0 && !isManual;
-  const displayQty = item.qty;
-  let valClass = 'step-val';
-  if (displayQty > 0) valClass = isManual ? 'step-val is-manual' : (item.autoOrder ? 'step-val is-auto' : 'step-val is-manual');
-
-  const vendorName = item.vendor || '';
-  const unitName   = item.unit   || '';
-
-  card.innerHTML = `
+  card.innerHTML=`
     <div class="dday-badge ${ddayClass}">${s.label}</div>
-    ${item.autoOrder ? '<div class="auto-badge show">자동</div>' : '<div class="auto-badge"></div>'}
+    ${item.autoOrder?'<div class="auto-badge show">자동</div>':'<div class="auto-badge"></div>'}
     <div class="card-img" id="cardImg_${item.id}" onclick="triggerImgUpload('${item.id}')">
-      <div class="card-img-placeholder">
-        <span class="emoji">${getCatEmoji(catId)}</span>
-        <span class="edit-hint">✏️ 사진 추가</span>
-      </div>
+      <div class="card-img-placeholder"><span class="emoji">${getCatEmoji(catId)}</span><span class="edit-hint">📷 사진 추가</span></div>
     </div>
     <input type="file" accept="image/*" class="img-input" id="imgInput_${item.id}" onchange="handleImgUpload('${item.id}',this)">
     <div class="card-body">
       <div class="card-name-row">
-        <span class="card-name" id="name_${item.id}" ondblclick="startEditName('${catId}','${item.id}')">${item.name}</span>
+        <span class="card-name" id="name_${item.id}" onclick="startEditName('${catId}','${item.id}')">${item.name}</span>
       </div>
-      <input class="card-name-input" id="nameInput_${item.id}" value="${item.name}"
-        onblur="saveEditName('${catId}','${item.id}')"
-        onkeydown="if(event.key==='Enter')saveEditName('${catId}','${item.id}')">
+      <div class="card-name-edit-wrap" id="nameEditWrap_${item.id}">
+        <input class="card-name-input-edit" id="nameInput_${item.id}" value="${item.name}">
+        <button class="name-save-btn" onclick="saveEditName('${catId}','${item.id}')">저장</button>
+      </div>
+      ${trText?`<div class="card-translation">${trText}</div>`:`<div class="card-translation" id="tr_${item.id}"></div>`}
       <div class="card-edit-row">
-        <span class="card-vendor-text">${vendorName} · ${unitName}</span>
-        <button class="card-edit-btn" onclick="toggleInlineEdit(event,'${catId}','${item.id}')">✏️</button>
+        <span class="card-vendor-unit-text" id="vendorUnit_${item.id}" onclick="toggleInlineEdit(event,'${catId}','${item.id}')">${item.vendor} · ${item.unit}</span>
       </div>
-      ${!isInactive ? `
+      ${!isInactive?`
       <div class="stepper">
         <button class="step-btn minus" onclick="stepQty('${catId}','${item.id}',-1)">−</button>
         <span class="${valClass}" id="val_${item.id}">${displayQty}</span>
         <button class="step-btn plus" onclick="stepQty('${catId}','${item.id}',1)">+</button>
-      </div>` : ''}
+      </div>`:''}
     </div>
     <div class="card-footer">
       <div class="order-btns">
-        ${!isInactive && idx > 0       ? `<button class="order-btn" onclick="moveItem('${catId}','${item.id}',-1)">▲</button>` : '<span style="width:28px"></span>'}
-        ${!isInactive && idx < total-1 ? `<button class="order-btn" onclick="moveItem('${catId}','${item.id}',1)">▼</button>`  : '<span style="width:28px"></span>'}
+        ${!isInactive&&idx>0?`<button class="order-btn" onclick="moveItem('${catId}','${item.id}',-1)">▲</button>`:'<span style="width:32px"></span>'}
+        ${!isInactive&&idx<total-1?`<button class="order-btn" onclick="moveItem('${catId}','${item.id}',1)">▼</button>`:'<span style="width:32px"></span>'}
       </div>
       <button class="card-menu-btn" onclick="toggleCardMenu(event,'menu_${item.id}')">···</button>
     </div>
     <div class="card-menu-popup" id="menu_${item.id}">
       ${isInactive
-        ? `<button class="card-menu-item" onclick="toggleInactive('${catId}','${item.id}',false);closeAllMenus()">✅ 활성화</button>`
-        : `<button class="card-menu-item" onclick="toggleAutoOrder('${catId}','${item.id}');closeAllMenus()">${item.autoOrder?'🔵 자동발주 OFF':'⚪ 자동발주 ON'}</button>
-           <button class="card-menu-item" onclick="toggleInactive('${catId}','${item.id}',true);closeAllMenus()">🚫 미사용으로</button>`}
+        ?`<button class="card-menu-item" onclick="toggleInactive('${catId}','${item.id}',false);closeAllMenus()">✅ 활성화</button>`
+        :`<button class="card-menu-item" onclick="toggleAutoOrder('${catId}','${item.id}');closeAllMenus()">${item.autoOrder?'🔵 자동발주 OFF':'⚪ 자동발주 ON'}</button>
+          <button class="card-menu-item" onclick="openMoveCat('${catId}','${item.id}');closeAllMenus()">📂 카테고리 이동</button>
+          ${catId==='ingredient'?`<button class="card-menu-item" onclick="openMoveSection('${catId}','${item.id}');closeAllMenus()">📌 섹션 이동</button>`:''}
+          <button class="card-menu-item" onclick="translateItem('${catId}','${item.id}');closeAllMenus()">🌐 번역 (영어/네팔어)</button>
+          <button class="card-menu-item" onclick="toggleInactive('${catId}','${item.id}',true);closeAllMenus()">🚫 미사용으로</button>`}
       <button class="card-menu-item danger" onclick="askDelete('${catId}','${item.id}');closeAllMenus()">🗑 삭제</button>
     </div>
     <div class="inline-edit-popup" id="inlineEdit_${item.id}">
       <div class="inline-edit-row">
         <span class="inline-edit-label">업체</span>
-        <select class="inline-edit-select" onchange="updateItemField('${catId}','${item.id}','vendor',this.value)">
+        <select class="inline-edit-select" id="vendorSel_${item.id}">
           ${state.vendors.map(v=>`<option${v.name===item.vendor?' selected':''}>${v.name}</option>`).join('')}
         </select>
       </div>
       <div class="inline-edit-row">
         <span class="inline-edit-label">단위</span>
-        <select class="inline-edit-select" onchange="updateItemField('${catId}','${item.id}','unit',this.value)">
+        <select class="inline-edit-select" id="unitSel_${item.id}">
           ${UNITS.map(u=>`<option${u===item.unit?' selected':''}>${u}</option>`).join('')}
         </select>
       </div>
+      <button class="inline-save-btn" onclick="saveInlineEdit('${catId}','${item.id}')">저장</button>
     </div>`;
-
   return card;
 }
 
-function getCatEmoji(catId) {
-  const m = {seafood:'🐟',ingredient:'🥬',alcohol:'🍺',packaging:'📦',etc:'🧹',welfare:'🎁'};
-  return m[catId] || '📦';
-}
+function getCatEmoji(catId){return({seafood:'🐟',ingredient:'🥬',alcohol:'🍺',packaging:'📦',etc:'🧹',welfare:'🎁'})[catId]||'📦'}
 
-// ── 이미지 로드 ──
-async function renderAllImages() {
-  const cats = activeCat === 'settings' ? [] : [state.categories.find(c=>c.id===activeCat)].filter(Boolean);
-  for (const cat of cats) {
-    for (const item of cat.items) {
-      const imgData = await loadImg('img_' + item.id);
-      if (imgData) setCardImage(item.id, imgData);
+// ── 이미지 ──
+async function renderAllImages(){
+  const cats=activeCat==='settings'?[]:[state.categories.find(c=>c.id===activeCat)].filter(Boolean);
+  for(const cat of cats){
+    for(const item of cat.items){
+      const imgData=await loadImg('img_'+item.id);
+      if(imgData) setCardImage(item.id,imgData);
     }
   }
 }
-
-function setCardImage(itemId, data) {
-  const wrap = document.getElementById('cardImg_' + itemId);
-  if (!wrap) return;
-  wrap.innerHTML = `<img src="${data}" alt="">`;
+function setCardImage(itemId,data){
+  const wrap=document.getElementById('cardImg_'+itemId);
+  if(!wrap) return;
+  wrap.innerHTML=`<img src="${data}" alt="" style="width:100%;height:100%;object-fit:cover">`;
 }
-
-function triggerImgUpload(itemId) {
-  document.getElementById('imgInput_' + itemId)?.click();
-}
-
-async function handleImgUpload(itemId, input) {
-  const file = input.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = async e => {
-    await saveImg('img_' + itemId, e.target.result);
-    setCardImage(itemId, e.target.result);
-  };
+function triggerImgUpload(itemId){document.getElementById('imgInput_'+itemId)?.click()}
+async function handleImgUpload(itemId,input){
+  const file=input.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=async e=>{await saveImg('img_'+itemId,e.target.result);setCardImage(itemId,e.target.result)};
   reader.readAsDataURL(file);
 }
 
-// ── 설정 HTML ──
-function renderSettingsHTML() {
-  const m = state.managers;
-  const vendorCards = state.vendors.map((v, i) => `
+// ── 섹션명 편집 ──
+function startEditZone(zoneId, currentName){
+  document.getElementById('zoneTitle_'+zoneId).style.display='none';
+  const input=document.getElementById('zoneTitleInput_'+zoneId);
+  const btn=document.getElementById('zoneSaveBtn_'+zoneId);
+  input.style.display='block';
+  btn.style.display='inline-block';
+  input.focus();input.select();
+}
+function cancelEditZone(zoneId){
+  const zone=INGREDIENT_ZONES.find(z=>z.id===zoneId);
+  if(!zone) return;
+  document.getElementById('zoneTitle_'+zoneId).style.display='';
+  document.getElementById('zoneTitleInput_'+zoneId).style.display='none';
+  document.getElementById('zoneSaveBtn_'+zoneId).style.display='none';
+}
+function saveZoneName(catId, zoneId){
+  const input=document.getElementById('zoneTitleInput_'+zoneId);
+  const val=input?.value.trim();
+  if(!val) return;
+  const zone=INGREDIENT_ZONES.find(z=>z.id===zoneId);
+  if(zone) zone.name=val;
+  const titleEl=document.getElementById('zoneTitle_'+zoneId);
+  if(titleEl) titleEl.textContent=val;
+  cancelEditZone(zoneId);
+}
+
+// ── 품목명 편집 ──
+function startEditName(catId, itemId){
+  document.getElementById('name_'+itemId).style.display='none';
+  document.getElementById('nameEditWrap_'+itemId).classList.add('show');
+  document.getElementById('nameInput_'+itemId).focus();
+}
+function saveEditName(catId, itemId){
+  const inp=document.getElementById('nameInput_'+itemId);
+  const val=inp?.value.trim();
+  if(!val) return;
+  const item=state.categories.find(c=>c.id===catId)?.items.find(i=>i.id===itemId);
+  if(item){item.name=val;save()}
+  document.getElementById('name_'+itemId).textContent=val;
+  document.getElementById('name_'+itemId).style.display='';
+  document.getElementById('nameEditWrap_'+itemId).classList.remove('show');
+}
+
+// ── 업체/단위 인라인 편집 ──
+function toggleInlineEdit(e, catId, itemId){
+  e.stopPropagation();closeAllMenus();
+  const popup=document.getElementById('inlineEdit_'+itemId);
+  if(!popup) return;
+  const isShowing=popup.classList.contains('show');
+  document.querySelectorAll('.inline-edit-popup').forEach(p=>p.classList.remove('show'));
+  if(!isShowing) popup.classList.add('show');
+}
+function saveInlineEdit(catId, itemId){
+  const vendor=document.getElementById('vendorSel_'+itemId)?.value;
+  const unit=document.getElementById('unitSel_'+itemId)?.value;
+  const item=state.categories.find(c=>c.id===catId)?.items.find(i=>i.id===itemId);
+  if(item){
+    if(vendor) item.vendor=vendor;
+    if(unit) item.unit=unit;
+    save();
+  }
+  const el=document.getElementById('vendorUnit_'+itemId);
+  if(el) el.textContent=`${item.vendor} · ${item.unit}`;
+  document.getElementById('inlineEdit_'+itemId).classList.remove('show');
+}
+
+// ── 번역 (Claude API) ──
+async function translateItem(catId, itemId){
+  const item=state.categories.find(c=>c.id===catId)?.items.find(i=>i.id===itemId);
+  if(!item) return;
+  document.getElementById('translateModal').classList.add('show');
+  document.getElementById('translateStatus').textContent=`"${item.name}" 번역 중...`;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6',
+        max_tokens:200,
+        messages:[{role:'user',content:`식당 식자재 품목명 "${item.name}"을 영어와 네팔어로 번역해줘. JSON만 반환해: {"en":"영어번역","ne":"नेपाली번역"}`}]
+      })
+    });
+    const data=await res.json();
+    const text=data.content[0].text;
+    const clean=text.replace(/```json|```/g,'').trim();
+    const parsed=JSON.parse(clean);
+    item.translations=parsed;
+    save();
+    const trEl=document.getElementById('tr_'+itemId);
+    if(trEl){
+      const trText=[parsed.en,parsed.ne].filter(Boolean).join(' / ');
+      trEl.textContent=trText;
+    }
+  }catch(e){
+    alert('번역 실패: '+e.message);
+  }
+  document.getElementById('translateModal').classList.remove('show');
+}
+
+// ── 카테고리 이동 ──
+function openMoveCat(catId, itemId){
+  pendingMoveCat={catId,itemId};
+  const item=state.categories.find(c=>c.id===catId)?.items.find(i=>i.id===itemId);
+  document.getElementById('moveCatItemName').textContent=`"${item?.name}" 이동할 카테고리 선택`;
+  const list=document.getElementById('moveCatList');
+  list.innerHTML=state.categories.filter(c=>c.id!==catId).map(c=>`
+    <div class="move-cat-item" onclick="confirmMoveCat('${c.id}')">${c.emoji} ${c.name}</div>`).join('');
+  document.getElementById('moveCatModal').classList.add('show');
+}
+function confirmMoveCat(toCatId){
+  const {catId,itemId}=pendingMoveCat;
+  const fromCat=state.categories.find(c=>c.id===catId);
+  const toCat=state.categories.find(c=>c.id===toCatId);
+  if(!fromCat||!toCat) return;
+  const idx=fromCat.items.findIndex(i=>i.id===itemId);
+  if(idx===-1) return;
+  const [item]=fromCat.items.splice(idx,1);
+  toCat.items.push(item);
+  save();
+  closeModal('moveCatModal');
+  rerenderCurrentTab(catId);
+}
+
+// ── 섹션 이동 (식자재) ──
+function openMoveSection(catId, itemId){
+  pendingMoveSection={catId,itemId};
+  const item=state.categories.find(c=>c.id===catId)?.items.find(i=>i.id===itemId);
+  document.getElementById('moveSectionItemName').textContent=`"${item?.name}" 이동할 섹션 선택`;
+  const list=document.getElementById('moveSectionList');
+  list.innerHTML=INGREDIENT_ZONES.map(z=>`
+    <div class="move-section-item" onclick="confirmMoveSection('${z.id}')">${z.name}</div>`).join('');
+  document.getElementById('moveSectionModal').classList.add('show');
+}
+function confirmMoveSection(zoneId){
+  const {itemId}=pendingMoveSection;
+  // 기존 zone에서 제거
+  INGREDIENT_ZONES.forEach(z=>{
+    const idx=z.items.indexOf(itemId);
+    if(idx!==-1) z.items.splice(idx,1);
+  });
+  // 새 zone에 추가
+  const zone=INGREDIENT_ZONES.find(z=>z.id===zoneId);
+  if(zone) zone.items.push(itemId);
+  save();
+  closeModal('moveSectionModal');
+  rerenderCurrentTab('ingredient');
+}
+
+// ── 나머지 인터랙션 ──
+function switchTab(catId){
+  activeCat=catId;
+  renderTabs();
+  document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
+  const t=document.getElementById('tab_'+catId);
+  if(t){t.classList.add('active');renderAllImages()}
+  document.getElementById('bottomBar').style.display=catId==='settings'?'none':'flex';
+}
+
+function stepQty(catId, itemId, delta){
+  const item=state.categories.find(c=>c.id===catId)?.items.find(i=>i.id===itemId);
+  if(!item) return;
+  item.qty=Math.max(0,(item.qty||0)+delta);
+  item.manualQty=item.qty>0;
+  save();
+  const el=document.getElementById('val_'+itemId);
+  if(el){
+    el.textContent=item.qty;
+    el.className=item.qty>0?(item.autoOrder?'step-val is-auto':'step-val is-manual'):'step-val';
+  }
+  updateOrderBtn();
+}
+
+function moveItem(catId, itemId, dir){
+  const cat=state.categories.find(c=>c.id===catId);
+  const idx=cat.items.findIndex(i=>i.id===itemId);
+  const ni=idx+dir;
+  if(ni<0||ni>=cat.items.length) return;
+  [cat.items[idx],cat.items[ni]]=[cat.items[ni],cat.items[idx]];
+  save();rerenderCurrentTab(catId);
+}
+
+function toggleAutoOrder(catId, itemId){
+  const item=state.categories.find(c=>c.id===catId)?.items.find(i=>i.id===itemId);
+  if(!item) return;
+  item.autoOrder=!item.autoOrder;
+  save();rerenderCurrentTab(catId);
+}
+
+function toggleInactive(catId, itemId, inactive){
+  const item=state.categories.find(c=>c.id===catId)?.items.find(i=>i.id===itemId);
+  if(item){item.inactive=inactive;save();rerenderCurrentTab(catId)}
+}
+
+function toggleInactiveSection(catId){
+  const cat=state.categories.find(c=>c.id===catId);
+  if(!cat) return;
+  cat.inactiveOpen=!cat.inactiveOpen;save();
+  document.getElementById('inactiveGrid_'+catId)?.classList.toggle('open',cat.inactiveOpen);
+  document.getElementById('inactiveChevron_'+catId)?.classList.toggle('open',cat.inactiveOpen);
+}
+
+function toggleCardMenu(e, menuId){
+  e.stopPropagation();closeAllMenus();
+  document.getElementById(menuId)?.classList.toggle('show');
+}
+function closeAllMenus(){
+  document.querySelectorAll('.card-menu-popup,.inline-edit-popup').forEach(m=>m.classList.remove('show'));
+}
+document.addEventListener('click',closeAllMenus);
+
+// ── 품목 추가 모달 ──
+function openAddModal(catId, zoneId){
+  addModalCatId=catId;addModalZoneId=zoneId;selectedUnit='개';
+  const cat=state.categories.find(c=>c.id===catId);
+  const defVendor=cat.items[0]?.vendor||state.vendors[0]?.name||'식자재업체';
+  const vendorOpts=state.vendors.map(v=>`<option${v.name===defVendor?' selected':''}>${v.name}</option>`).join('');
+  document.getElementById('addModalBody').innerHTML=`
+    <div class="add-modal-field"><label>품목명</label><input class="add-modal-input" id="addModalName" placeholder="품목명 입력"></div>
+    <div class="add-modal-field"><label>단위</label>
+      <div class="unit-grid">${UNITS.map(u=>`<button class="unit-chip ${u==='개'?'selected':''}" onclick="selectUnit('${u}',this)">${u}</button>`).join('')}</div>
+    </div>
+    <div class="add-modal-field"><label>업체</label><select class="add-modal-select" id="addModalVendor">${vendorOpts}</select></div>`;
+  setTimeout(()=>document.getElementById('addModalName')?.focus(),50);
+  document.getElementById('addItemModal').classList.add('show');
+}
+function selectUnit(unit, el){
+  selectedUnit=unit;
+  document.querySelectorAll('.unit-chip').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function confirmAddItem(){
+  const name=document.getElementById('addModalName')?.value.trim();
+  if(!name) return;
+  const vendor=document.getElementById('addModalVendor')?.value||state.vendors[0]?.name;
+  const cat=state.categories.find(c=>c.id===addModalCatId);
+  const newItem={id:addModalCatId+'_'+Date.now(),name,vendor,unit:selectedUnit,cycle:14,lastOrder:null,orders:[],qty:0,autoOrder:false,manualQty:false,inactive:false,translations:{}};
+  cat.items.push(newItem);
+  // 섹션 추가인 경우 해당 섹션에 등록
+  if(addModalZoneId){
+    const zone=INGREDIENT_ZONES.find(z=>z.id===addModalZoneId);
+    if(zone) zone.items.push(newItem.id);
+  }
+  save();closeModal('addItemModal');rerenderCurrentTab(addModalCatId);
+}
+
+// ── 삭제 ──
+function askDelete(catId, itemId){
+  pendingDel={cat:catId,item:itemId};
+  const item=state.categories.find(c=>c.id===catId)?.items.find(i=>i.id===itemId);
+  document.getElementById('deleteMsg').textContent=`"${item?.name}" 을(를) 삭제하시겠습니까? 발주 이력도 함께 삭제됩니다.`;
+  document.getElementById('deleteModal').classList.add('show');
+}
+function confirmDelete(){
+  const cat=state.categories.find(c=>c.id===pendingDel.cat);
+  if(cat) cat.items=cat.items.filter(i=>i.id!==pendingDel.item);
+  save();closeModal('deleteModal');rerenderCurrentTab(pendingDel.cat);
+}
+
+// ── 업체 관리 ──
+function renderSettingsHTML(){
+  const vendorCards=state.vendors.map((v,i)=>`
     <div class="vendor-card">
       <div class="vendor-card-top">
         <div class="vendor-card-info">
           <span class="vendor-name-label">${v.name}</span>
-          <span class="vendor-contact">${v.contact || '연락처 미등록'}</span>
+          <span class="vendor-contact">${v.contact||'연락처 미등록'}</span>
         </div>
         <div class="vendor-card-actions">
           <button class="vendor-sms-toggle ${v.sms?'on':''}" onclick="askSmsToggle(${i})">${v.sms?'문자 O':'문자 X'}</button>
           <button class="vendor-edit-btn" onclick="toggleVendorForm(${i})">✏️</button>
-          <button class="vendor-del-btn" onclick="deleteVendor(${i})">🗑</button>
+          <button class="vendor-del-btn" onclick="askVendorDelete(${i})">🗑</button>
         </div>
       </div>
       <div class="vendor-edit-form" id="vendorForm_${i}">
-        <div class="vendor-field"><label>연락처</label><input value="${v.contact||''}" placeholder="010-0000-0000" onchange="updateVendor(${i},'contact',this.value)"></div>
-        <div class="vendor-field"><label>링크</label><input value="${v.link||''}" placeholder="https://..." onchange="updateVendor(${i},'link',this.value)"></div>
-        <div class="vendor-field"><label>아이디</label><input value="${v.vid||''}" placeholder="아이디" onchange="updateVendor(${i},'vid',this.value)"></div>
-        <div class="vendor-field"><label>비밀번호</label><input type="password" value="${v.pw||''}" placeholder="비밀번호" onchange="updateVendor(${i},'pw',this.value)"></div>
+        <div class="vendor-field"><label>업체명</label><input id="vName_${i}" value="${v.name}" placeholder="업체명" onkeydown="if(event.key==='Enter')saveVendor(${i})"></div>
+        <div class="vendor-field"><label>연락처</label><input id="vContact_${i}" value="${v.contact||''}" placeholder="010-0000-0000"></div>
+        <div class="vendor-field"><label>링크</label><input id="vLink_${i}" value="${v.link||''}" placeholder="https://..."></div>
+        <div class="vendor-field"><label>아이디</label><input id="vVid_${i}" value="${v.vid||''}" placeholder="아이디"></div>
+        <div class="vendor-field"><label>비밀번호</label><input type="password" id="vPw_${i}" value="${v.pw||''}" placeholder="비밀번호"></div>
+        <div class="vendor-field"><label>마지막문구</label><input id="vSuffix_${i}" value="${v.suffix||''}" placeholder="예: 주문하겠습니다~"></div>
+        <button class="vendor-save-btn" onclick="saveVendor(${i})">저장</button>
       </div>
     </div>`).join('');
 
   return `
-
+    <div class="sop-block">
+      <h3>📋 앱 사용법 (SOP)</h3>
+      <div class="sop-step"><div class="sop-num">1</div><div class="sop-text"><strong>수산/식자재 탭</strong> → 오늘 필요한 품목 수량 입력 (+/- 버튼)</div></div>
+      <div class="sop-step"><div class="sop-num">2</div><div class="sop-text"><strong>D-표시</strong> 확인 · 빨간=오늘 발주 필요, 노란=D-1~3, 초록=여유</div></div>
+      <div class="sop-step"><div class="sop-num">3</div><div class="sop-text">주류/포장재 필요시 해당 탭 열어서 추가 입력</div></div>
+      <div class="sop-step"><div class="sop-num">4</div><div class="sop-text">하단 <strong>발주 확정 →</strong> 버튼 클릭</div></div>
+      <div class="sop-step"><div class="sop-num">5</div><div class="sop-text">업체별 발주 내용 확인 후 <strong>문자 발송</strong> 클릭</div></div>
+      <div class="sop-step"><div class="sop-num">6</div><div class="sop-text">수신된 문자를 각 업체 <strong>카톡방에 복붙</strong></div></div>
+      <div class="sop-step"><div class="sop-num">7</div><div class="sop-text">품목 추가/수정: 카드 클릭(이름), 업체·단위 텍스트 클릭(드롭다운)</div></div>
+      <div class="sop-step"><div class="sop-num">8</div><div class="sop-text">품목 이동/삭제: 카드 우하단 <strong>···</strong> 버튼</div></div>
+      <div class="sop-step"><div class="sop-num">9</div><div class="sop-text">업체 관리/마지막문구 설정: 이 설정 탭</div></div>
+    </div>
     <div class="settings-block">
       <h3>업체 관리</h3>
       ${vendorCards}
@@ -816,352 +1112,192 @@ function renderSettingsHTML() {
     </div>`;
 }
 
-// ── 인터랙션 ──
-function switchTab(catId) {
-  activeCat = catId;
-  renderTabs();
-  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-  const t = document.getElementById('tab_' + catId);
-  if (t) { t.classList.add('active'); renderAllImages(); }
-  document.getElementById('bottomBar').style.display = catId === 'settings' ? 'none' : 'flex';
-}
-
-function stepQty(catId, itemId, delta) {
-  const item = state.categories.find(c=>c.id===catId)?.items.find(i=>i.id===itemId);
-  if (!item) return;
-  item.qty = Math.max(0, (item.qty||0) + delta);
-  item.manualQty = item.qty > 0;
+function toggleVendorForm(idx){document.getElementById('vendorForm_'+idx)?.classList.toggle('open')}
+function saveVendor(idx){
+  state.vendors[idx].name=document.getElementById('vName_'+idx)?.value.trim()||state.vendors[idx].name;
+  state.vendors[idx].contact=document.getElementById('vContact_'+idx)?.value||'';
+  state.vendors[idx].link=document.getElementById('vLink_'+idx)?.value||'';
+  state.vendors[idx].vid=document.getElementById('vVid_'+idx)?.value||'';
+  state.vendors[idx].pw=document.getElementById('vPw_'+idx)?.value||'';
+  state.vendors[idx].suffix=document.getElementById('vSuffix_'+idx)?.value||'';
   save();
-  const el = document.getElementById('val_' + itemId);
-  if (el) {
-    el.textContent = item.qty;
-    el.className = item.qty > 0 ? (item.autoOrder ? 'step-val is-auto' : 'step-val is-manual') : 'step-val';
-  }
-  updateOrderBtn();
+  document.getElementById('tab_settings').innerHTML=renderSettingsHTML();
 }
-
-function moveItem(catId, itemId, dir) {
-  const cat = state.categories.find(c=>c.id===catId);
-  const idx = cat.items.findIndex(i=>i.id===itemId);
-  const ni = idx + dir;
-  if (ni < 0 || ni >= cat.items.length) return;
-  [cat.items[idx], cat.items[ni]] = [cat.items[ni], cat.items[idx]];
-  save(); rerenderCurrentTab(catId);
+function askVendorDelete(idx){
+  pendingVendorDel=idx;
+  document.getElementById('vendorDeleteMsg').textContent=`"${state.vendors[idx].name}" 업체를 삭제하시겠습니까?`;
+  document.getElementById('vendorDeleteModal').classList.add('show');
 }
-
-function rerenderCurrentTab(catId) {
-  const tab = document.getElementById('tab_' + catId);
-  if (!tab) return;
-  const cat = state.categories.find(c=>c.id===catId);
-  if (!cat) return;
-  // 탭 전체 재렌더
-  const wasActive = tab.classList.contains('active');
-  const container = document.getElementById('mainContent');
-  const oldTab = container.querySelector('#tab_' + catId);
-  if (oldTab) oldTab.remove();
-
-  const div = document.createElement('div');
-  div.className = 'tab-content' + (wasActive ? ' active' : '');
-  div.id = 'tab_' + catId;
-
-  if (CAT_FORMULA[catId]) {
-    const fb = document.createElement('div');
-    fb.className = 'formula-bar';
-    fb.innerHTML = `<strong>발주 제안 공식</strong> · ${CAT_FORMULA[catId]}`;
-    div.appendChild(fb);
-  }
-
-  const activeItems   = cat.items.filter(i => !i.inactive);
-  const inactiveItems = cat.items.filter(i => i.inactive);
-
-  if (catId === 'ingredient') {
-    const zoneMap = {};
-    INGREDIENT_ZONES.forEach(z => { zoneMap[z.id] = []; });
-    const unzoned = [];
-    activeItems.forEach(item => {
-      let placed = false;
-      for (const z of INGREDIENT_ZONES) { if (z.items.includes(item.id)) { zoneMap[z.id].push(item); placed = true; break; } }
-      if (!placed) unzoned.push(item);
-    });
-    INGREDIENT_ZONES.forEach(zone => {
-      const zItems = zoneMap[zone.id];
-      if (!zItems.length) return;
-      const zSec = document.createElement('div');
-      zSec.className = 'zone-section';
-      zSec.innerHTML = `<div class="zone-header"><span class="zone-title">${zone.name}</span><span class="zone-count">${zItems.length}개</span></div>`;
-      const g = document.createElement('div'); g.className = 'card-grid';
-      zItems.forEach((item,idx) => g.appendChild(createItemCard(catId, item, idx, zItems.length)));
-      zSec.appendChild(g); div.appendChild(zSec);
-    });
-  } else {
-    const grid = document.createElement('div'); grid.className = 'card-grid';
-    activeItems.forEach((item,idx) => grid.appendChild(createItemCard(catId, item, idx, activeItems.length)));
-    div.appendChild(grid);
-  }
-
-  if (inactiveItems.length > 0) {
-    const sec = document.createElement('div'); sec.className = 'inactive-section';
-    const isOpen = cat.inactiveOpen || false;
-    sec.innerHTML = `<button class="inactive-toggle" onclick="toggleInactiveSection('${catId}')"><span class="inactive-toggle-label">🚫 미사용 ${inactiveItems.length}개</span><span class="inactive-chevron ${isOpen?'open':''}" id="inactiveChevron_${catId}">▼</span></button><div class="inactive-grid ${isOpen?'open':''}" id="inactiveGrid_${catId}"></div>`;
-    div.appendChild(sec);
-    setTimeout(() => {
-      const g = document.getElementById('inactiveGrid_' + catId);
-      if (g) inactiveItems.forEach((item,idx) => g.appendChild(createItemCard(catId, item, idx, inactiveItems.length, true)));
-    }, 0);
-  }
-
-  const addRow = document.createElement('div'); addRow.className = 'add-item-row';
-  addRow.innerHTML = `<button class="add-item-btn" onclick="openAddModal('${catId}')">+ 품목 추가</button>`;
-  div.appendChild(addRow);
-  container.appendChild(div);
-  if (wasActive) renderAllImages();
-  updateOrderBtn();
+function confirmVendorDelete(){
+  if(pendingVendorDel!==null){state.vendors.splice(pendingVendorDel,1);save()}
+  closeModal('vendorDeleteModal');
+  document.getElementById('tab_settings').innerHTML=renderSettingsHTML();
 }
-
-function startEditName(catId, itemId) {
-  document.getElementById('name_' + itemId).style.display = 'none';
-  const inp = document.getElementById('nameInput_' + itemId);
-  inp.style.display = 'block'; inp.focus(); inp.select();
-}
-function saveEditName(catId, itemId) {
-  const inp = document.getElementById('nameInput_' + itemId);
-  const val = inp?.value.trim();
-  if (!val) return;
-  const item = state.categories.find(c=>c.id===catId)?.items.find(i=>i.id===itemId);
-  if (item) { item.name = val; save(); }
-  const el = document.getElementById('name_' + itemId);
-  if (el) { el.textContent = val; el.style.display = ''; }
-  if (inp) inp.style.display = 'none';
-}
-
-function toggleInlineEdit(e, catId, itemId) {
-  e.stopPropagation();
-  closeAllMenus();
-  const popup = document.getElementById('inlineEdit_' + itemId);
-  if (!popup) return;
-  const isShowing = popup.classList.contains('show');
-  document.querySelectorAll('.inline-edit-popup').forEach(p => p.classList.remove('show'));
-  if (!isShowing) popup.classList.add('show');
-}
-
-function updateItemField(catId, itemId, field, val) {
-  const item = state.categories.find(c=>c.id===catId)?.items.find(i=>i.id===itemId);
-  if (!item) return;
-  item[field] = val; save();
-  const el = item.vendor && item.unit ? document.querySelector(`#card_${itemId} .card-vendor-text`) : null;
-  if (el) el.textContent = `${item.vendor} · ${item.unit}`;
-}
-
-function toggleAutoOrder(catId, itemId) {
-  const item = state.categories.find(c=>c.id===catId)?.items.find(i=>i.id===itemId);
-  if (!item) return;
-  item.autoOrder = !item.autoOrder;
-  save(); rerenderCurrentTab(catId);
-}
-
-function toggleInactive(catId, itemId, inactive) {
-  const item = state.categories.find(c=>c.id===catId)?.items.find(i=>i.id===itemId);
-  if (item) { item.inactive = inactive; save(); rerenderCurrentTab(catId); }
-}
-
-function toggleInactiveSection(catId) {
-  const cat = state.categories.find(c=>c.id===catId);
-  if (!cat) return;
-  cat.inactiveOpen = !cat.inactiveOpen; save();
-  document.getElementById('inactiveGrid_' + catId)?.classList.toggle('open', cat.inactiveOpen);
-  document.getElementById('inactiveChevron_' + catId)?.classList.toggle('open', cat.inactiveOpen);
-}
-
-function toggleCardMenu(e, menuId) {
-  e.stopPropagation(); closeAllMenus();
-  document.getElementById(menuId)?.classList.toggle('show');
-}
-function closeAllMenus() {
-  document.querySelectorAll('.card-menu-popup,.inline-edit-popup').forEach(m => m.classList.remove('show'));
-}
-document.addEventListener('click', closeAllMenus);
-
-// 품목 추가 모달
-function openAddModal(catId) {
-  addModalCatId = catId; selectedUnit = '개';
-  const cat = state.categories.find(c=>c.id===catId);
-  const defVendor = cat.items[0]?.vendor || state.vendors[0]?.name || '식자재업체';
-  const vendorOpts = state.vendors.map(v=>`<option${v.name===defVendor?' selected':''}>${v.name}</option>`).join('');
-  document.getElementById('addModalBody').innerHTML = `
-    <div class="add-modal-field"><label>품목명</label><input class="add-modal-input" id="addModalName" placeholder="품목명 입력"></div>
-    <div class="add-modal-field"><label>단위</label>
-      <div class="unit-grid">${UNITS.map(u=>`<button class="unit-chip ${u==='개'?'selected':''}" onclick="selectUnit('${u}',this)">${u}</button>`).join('')}</div>
-    </div>
-    <div class="add-modal-field"><label>업체</label><select class="add-modal-select" id="addModalVendor">${vendorOpts}</select></div>`;
-  setTimeout(() => document.getElementById('addModalName')?.focus(), 50);
-  document.getElementById('addItemModal').classList.add('show');
-}
-function selectUnit(unit, el) {
-  selectedUnit = unit;
-  document.querySelectorAll('.unit-chip').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-}
-function confirmAddItem() {
-  const name = document.getElementById('addModalName')?.value.trim();
-  if (!name) return;
-  const vendor = document.getElementById('addModalVendor')?.value || state.vendors[0]?.name;
-  const cat = state.categories.find(c=>c.id===addModalCatId);
-  cat.items.push({ id: addModalCatId+'_'+Date.now(), name, vendor, unit: selectedUnit, cycle:14, lastOrder:null, orders:[], qty:0, autoOrder:false, manualQty:false, inactive:false });
-  save(); closeModal('addItemModal'); rerenderCurrentTab(addModalCatId);
-}
-
-// 삭제
-function askDelete(catId, itemId) {
-  pendingDel = {cat:catId, item:itemId};
-  const item = state.categories.find(c=>c.id===catId)?.items.find(i=>i.id===itemId);
-  document.getElementById('deleteMsg').textContent = `"${item?.name}" 을(를) 삭제하시겠습니까? 발주 이력도 함께 삭제됩니다.`;
-  document.getElementById('deleteModal').classList.add('show');
-}
-function confirmDelete() {
-  const cat = state.categories.find(c=>c.id===pendingDel.cat);
-  if (cat) cat.items = cat.items.filter(i=>i.id!==pendingDel.item);
-  save(); closeModal('deleteModal'); rerenderCurrentTab(pendingDel.cat);
-}
-
-// 업체 관리
-function toggleVendorForm(idx) {
-  const form = document.getElementById('vendorForm_' + idx);
-  if (form) form.classList.toggle('open');
-}
-function updateVendor(idx, field, val) { state.vendors[idx][field] = val; save(); }
-function askSmsToggle(idx) {
-  pendingSmsToggle.idx = idx;
-  const v = state.vendors[idx];
-  document.getElementById('smsConfirmMsg').textContent = `"${v.name}" 업체의 문자 발송을 ${v.sms ? 'OFF' : 'ON'} 으로 변경하시겠습니까?`;
+function askSmsToggle(idx){
+  pendingSmsToggle.idx=idx;
+  const v=state.vendors[idx];
+  document.getElementById('smsConfirmMsg').textContent=`"${v.name}" 업체의 문자 발송을 ${v.sms?'OFF':'ON'} 으로 변경하시겠습니까?`;
   document.getElementById('smsConfirmModal').classList.add('show');
 }
-function confirmSmsToggle() {
-  const idx = pendingSmsToggle.idx;
-  if (idx !== null) { state.vendors[idx].sms = !state.vendors[idx].sms; save(); }
+function confirmSmsToggle(){
+  const idx=pendingSmsToggle.idx;
+  if(idx!==null){state.vendors[idx].sms=!state.vendors[idx].sms;save()}
   closeModal('smsConfirmModal');
-  const tab = document.getElementById('tab_settings');
-  if (tab) tab.innerHTML = renderSettingsHTML();
+  document.getElementById('tab_settings').innerHTML=renderSettingsHTML();
 }
-function deleteVendor(idx) { state.vendors.splice(idx,1); save(); document.getElementById('tab_settings').innerHTML = renderSettingsHTML(); }
-function addVendor() {
-  const input = document.getElementById('newVendorInput');
-  if (!input?.value.trim()) return;
-  state.vendors.push({name:input.value.trim(), sms:true, contact:'', link:'', vid:'', pw:''});
-  input.value = ''; save(); document.getElementById('tab_settings').innerHTML = renderSettingsHTML();
-}
-
-function updateOrderBtn() {
-  let cnt = 0;
-  state.categories.forEach(cat => cat.items.forEach(item => { if (item.qty > 0) cnt++; }));
-  const btn = document.getElementById('orderBtn');
-  btn.textContent = cnt > 0 ? `발주 확정 (${cnt}개) →` : '발주 확정 →';
-  btn.className = 'btn-order' + (cnt > 0 ? ' ready' : '');
+function addVendor(){
+  const input=document.getElementById('newVendorInput');
+  if(!input?.value.trim()) return;
+  state.vendors.push({name:input.value.trim(),sms:true,contact:'',link:'',vid:'',pw:'',suffix:''});
+  input.value='';save();
+  document.getElementById('tab_settings').innerHTML=renderSettingsHTML();
 }
 
-// 검색
-function handleSearch(query) {
-  document.getElementById('searchClear').style.display = query ? 'block' : 'none';
-  if (!query.trim()) { document.querySelectorAll('.item-card').forEach(c => c.classList.remove('highlighted')); return; }
-  const q = query.toLowerCase();
-  let first = null;
-  state.categories.forEach(cat => {
-    cat.items.forEach(item => {
-      const card = document.getElementById('card_' + item.id);
-      if (!card) return;
-      const match = item.name.toLowerCase().includes(q) || item.vendor.toLowerCase().includes(q);
-      card.classList.toggle('highlighted', match);
-      if (match && !first) first = {catId: cat.id, itemId: item.id};
+function updateOrderBtn(){
+  let cnt=0;
+  state.categories.forEach(cat=>cat.items.forEach(item=>{if(item.qty>0)cnt++}));
+  const btn=document.getElementById('orderBtn');
+  btn.textContent=cnt>0?`발주 확정 (${cnt}개) →`:'발주 확정 →';
+  btn.className='btn-order'+(cnt>0?' ready':'');
+}
+
+// ── 검색 ──
+function handleSearch(query){
+  document.getElementById('searchClear').style.display=query?'block':'none';
+  if(!query.trim()){document.querySelectorAll('.item-card').forEach(c=>c.classList.remove('highlighted'));return}
+  const q=query.toLowerCase();
+  let first=null;
+  state.categories.forEach(cat=>{
+    cat.items.forEach(item=>{
+      const card=document.getElementById('card_'+item.id);
+      if(!card) return;
+      const match=item.name.toLowerCase().includes(q)||item.vendor.toLowerCase().includes(q);
+      card.classList.toggle('highlighted',match);
+      if(match&&!first) first={catId:cat.id,itemId:item.id};
     });
   });
-  if (first && activeCat !== first.catId) {
-    switchTab(first.catId); renderTabs();
-    setTimeout(() => document.getElementById('card_' + first.itemId)?.scrollIntoView({behavior:'smooth',block:'center'}), 150);
-  } else if (first) {
-    document.getElementById('card_' + first.itemId)?.scrollIntoView({behavior:'smooth',block:'center'});
+  if(first&&activeCat!==first.catId){
+    switchTab(first.catId);renderTabs();
+    setTimeout(()=>document.getElementById('card_'+first.itemId)?.scrollIntoView({behavior:'smooth',block:'center'}),150);
+  }else if(first){
+    document.getElementById('card_'+first.itemId)?.scrollIntoView({behavior:'smooth',block:'center'});
   }
 }
-function clearSearch() {
-  document.getElementById('searchInput').value = '';
-  document.getElementById('searchClear').style.display = 'none';
-  document.querySelectorAll('.item-card').forEach(c => c.classList.remove('highlighted'));
+function clearSearch(){
+  document.getElementById('searchInput').value='';
+  document.getElementById('searchClear').style.display='none';
+  document.querySelectorAll('.item-card').forEach(c=>c.classList.remove('highlighted'));
 }
 
-// 발주 모달
-function openOrderModal() {
-  const groups = {};
-  state.categories.forEach(cat => {
-    cat.items.forEach(item => {
-      if (item.qty <= 0) return;
-      if (!groups[item.vendor]) groups[item.vendor] = [];
+// ── 발주 모달 ──
+function openOrderModal(){
+  const groups={};
+  state.categories.forEach(cat=>{
+    cat.items.forEach(item=>{
+      if(item.qty<=0) return;
+      if(!groups[item.vendor]) groups[item.vendor]=[];
       groups[item.vendor].push(item);
     });
   });
-  if (!Object.keys(groups).length) { alert('수량이 입력된 품목이 없습니다.'); return; }
-
-  const preview = Object.keys(groups).map(vendor => {
-    const v = state.vendors.find(v=>v.name===vendor);
-    const tag = v?.sms ? '<span class="tag-sms">문자 발송</span>' : '<span class="tag-nosms">문자 제외</span>';
-    const hasCred = v?.link || v?.vid || v?.pw;
-    const cred = hasCred ? `<div class="order-vendor-cred">${v.link?`🔗 ${v.link}<br>`:''} ${v.vid?`ID: ${v.vid} `:''} ${v.pw?`PW: ${v.pw}`:''}</div>` : '';
-    const items = groups[vendor].map(i=>`<div class="order-item-line">${i.name} ${i.qty}${i.unit}</div>`).join('');
-    return `<div class="order-preview-block"><div class="order-vendor-name">${vendor} ${tag}</div>${cred}${items}</div>`;
+  if(!Object.keys(groups).length){alert('수량이 입력된 품목이 없습니다.');return}
+  const preview=Object.keys(groups).map(vendor=>{
+    const v=state.vendors.find(v=>v.name===vendor);
+    const tag=v?.sms?'<span class="tag-sms">문자 발송</span>':'<span class="tag-nosms">문자 제외</span>';
+    const suffix=v?.suffix?`<div class="order-vendor-suffix">마지막 문구: ${v.suffix}</div>`:'';
+    const items=groups[vendor].map(i=>`<div class="order-item-line">${i.name} ${i.qty}${i.unit}</div>`).join('');
+    return `<div class="order-preview-block"><div class="order-vendor-name">${vendor} ${tag}</div>${suffix}${items}</div>`;
   }).join('');
-
-  document.getElementById('orderPreview').innerHTML = preview;
-  document.getElementById('sendStatus').innerHTML = '';
-  document.getElementById('sendBtn').disabled = false;
-  document.getElementById('sendBtn').textContent = '문자 발송';
+  document.getElementById('orderPreview').innerHTML=preview;
+  document.getElementById('sendStatus').innerHTML='';
+  document.getElementById('sendBtn').disabled=false;
+  document.getElementById('sendBtn').textContent='문자 발송';
   document.getElementById('orderModal').classList.add('show');
 }
 
-async function sendOrder() {
-  const btn = document.getElementById('sendBtn');
-  btn.disabled = true; btn.textContent = '발송 중...';
-  const groups = {};
-  state.categories.forEach(cat => {
-    cat.items.forEach(item => {
-      if (item.qty <= 0) return;
-      const v = state.vendors.find(v=>v.name===item.vendor);
-      if (!v?.sms) return;
-      if (!groups[item.vendor]) groups[item.vendor] = {items:[], link:v.link||'', accountId:v.vid||'', accountPw:v.pw||''};
-      groups[item.vendor].items.push({name:item.name, qty:item.qty, unit:item.unit});
+async function sendOrder(){
+  const btn=document.getElementById('sendBtn');
+  btn.disabled=true;btn.textContent='발송 중...';
+  const groups={};
+  state.categories.forEach(cat=>{
+    cat.items.forEach(item=>{
+      if(item.qty<=0) return;
+      const v=state.vendors.find(v=>v.name===item.vendor);
+      if(!v?.sms) return;
+      if(!groups[item.vendor]) groups[item.vendor]={items:[],suffix:v.suffix||''};
+      groups[item.vendor].items.push({name:item.name,qty:item.qty,unit:item.unit});
     });
   });
-  const orders = Object.keys(groups).map(vendor => ({vendor, ...groups[vendor]}));
-  try {
-    const res = await fetch(GAS_URL + '?action=sendOrder', {method:'POST', body:JSON.stringify(orders)});
-    const data = await res.json();
-    if (!data.success) throw new Error(JSON.stringify(data));
-  } catch(e) {
-    document.getElementById('sendStatus').innerHTML = `<div class="send-status send-err">발송 실패: ${e.message}</div>`;
-    btn.disabled = false; btn.textContent = '다시 시도'; return;
+  const orders=Object.keys(groups).map(vendor=>({vendor,...groups[vendor]}));
+  try{
+    const res=await fetch(GAS_URL+'?action=sendOrder',{method:'POST',body:JSON.stringify(orders)});
+    const data=await res.json();
+    if(!data.success) throw new Error(JSON.stringify(data));
+  }catch(e){
+    document.getElementById('sendStatus').innerHTML=`<div class="send-status send-err">발송 실패: ${e.message}</div>`;
+    btn.disabled=false;btn.textContent='다시 시도';return;
   }
-  const t = today();
-  state.categories.forEach(cat => {
-    cat.items.forEach(item => {
-      if (item.qty > 0) {
-        item.lastOrder = t;
-        if (!item.orders) item.orders = [];
+  const t=today();
+  state.categories.forEach(cat=>{
+    cat.items.forEach(item=>{
+      if(item.qty>0){
+        item.lastOrder=t;
+        if(!item.orders) item.orders=[];
         item.orders.push(t);
-        if (item.orders.length > 20) item.orders = item.orders.slice(-20);
-        item.qty = 0; item.manualQty = false;
+        if(item.orders.length>20) item.orders=item.orders.slice(-20);
+        item.qty=0;item.manualQty=false;
       }
     });
   });
   save();
-  document.getElementById('sendStatus').innerHTML = '<div class="send-status send-ok">✅ 발주 완료! 수량 초기화됨</div>';
-  btn.textContent = '완료';
-  setTimeout(() => { closeModal('orderModal'); renderContent(); }, 1500);
+  document.getElementById('sendStatus').innerHTML='<div class="send-status send-ok">✅ 발주 완료! 수량 초기화됨</div>';
+  btn.textContent='완료';
+  setTimeout(()=>{closeModal('orderModal');renderContent()},1500);
 }
 
-function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+
+function rerenderCurrentTab(catId){
+  const wasActive=activeCat===catId;
+  const container=document.getElementById('mainContent');
+  const old=container.querySelector('#tab_'+catId);
+  if(old) old.remove();
+  const cat=state.categories.find(c=>c.id===catId);
+  if(!cat) return;
+  const div=document.createElement('div');
+  div.className='tab-content'+(wasActive?' active':'');
+  div.id='tab_'+catId;
+  const activeItems=cat.items.filter(i=>!i.inactive);
+  const inactiveItems=cat.items.filter(i=>i.inactive);
+  if(catId==='ingredient'){
+    const zoneMap={};INGREDIENT_ZONES.forEach(z=>{zoneMap[z.id]=[]});const unzoned=[];
+    activeItems.forEach(item=>{let placed=false;for(const z of INGREDIENT_ZONES){if(z.items.includes(item.id)){zoneMap[z.id].push(item);placed=true;break}}if(!placed)unzoned.push(item)});
+    INGREDIENT_ZONES.forEach(zone=>{const zi=zoneMap[zone.id];if(!zi.length)return;div.appendChild(buildZoneSection(catId,zone.id,zone.name,zi,true))});
+    if(unzoned.length>0) div.appendChild(buildZoneSection(catId,'z_extra','📌 기타',unzoned,true));
+  }else{
+    const grid=document.createElement('div');grid.className='card-grid';
+    activeItems.forEach((item,idx)=>grid.appendChild(createItemCard(catId,item,idx,activeItems.length)));
+    div.appendChild(grid);
+    const addRow=document.createElement('div');addRow.className='add-item-row';
+    addRow.innerHTML=`<button class="add-item-btn" onclick="openAddModal('${catId}',null)">+ 품목 추가</button>`;
+    div.appendChild(addRow);
+  }
+  if(inactiveItems.length>0){
+    const sec=document.createElement('div');sec.className='inactive-section';const isOpen=cat.inactiveOpen||false;
+    sec.innerHTML=`<button class="inactive-toggle" onclick="toggleInactiveSection('${catId}')"><span class="inactive-toggle-label">🚫 미사용 ${inactiveItems.length}개</span><span class="inactive-chevron ${isOpen?'open':''}" id="inactiveChevron_${catId}">▼</span></button><div class="inactive-grid ${isOpen?'open':''}" id="inactiveGrid_${catId}"></div>`;
+    div.appendChild(sec);
+    setTimeout(()=>{const g=document.getElementById('inactiveGrid_'+catId);if(g)inactiveItems.forEach((item,idx)=>g.appendChild(createItemCard(catId,item,idx,inactiveItems.length,true)))},0);
+  }
+  container.appendChild(div);
+  if(wasActive) renderAllImages();
+  updateOrderBtn();
+}
 
 // ── 초기화 ──
 openImgDB();
 renderTabs();
 renderContent();
-const hasQty = state.categories.some(c => c.items.some(i => i.qty > 0));
-if (hasQty) document.getElementById('draftBadge').classList.add('show');
+const hasQty=state.categories.some(c=>c.items.some(i=>i.qty>0));
+if(hasQty) document.getElementById('draftBadge').classList.add('show');
 </script>
 </body>
 </html>
