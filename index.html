@@ -355,7 +355,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue','Apple SD Got
 </div>
 
 <script>
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbzzfnZkSakqVlLS3e0es3v4ojYTKKO9dnA3LUdH3ack3aVPsoATcWrNejrwfyR5Jxxn/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzmdAm9Yeo0Ao8G2NJZjCahoOUw11PIpnROWHQHz3mf1FYUuKKBKNRjJUXJ4dgjNcVe/exec';
 const UNITS = ['개','봉','병','단','망','kg','g','박스','팩','판','통','장','묶음','포','마리'];
 
 const INGREDIENT_ZONES = [
@@ -894,18 +894,26 @@ async function renderAllImages(){
   const cats=activeCat==='settings'?[]:[state.categories.find(c=>c.id===activeCat)].filter(Boolean);
   for(const cat of cats){
     for(const item of cat.items){
-      // 드라이브 URL 있으면 우선 사용
-      if(item.imageUrl){
-        setCardImage(item.id, item.imageUrl);
-        // 로컬에도 캐시 (오프라인 대비)
-        const localImg=await loadImg('img_'+item.id);
-        if(!localImg) continue;
-      } else {
-        const imgData=await loadImg('img_'+item.id);
-        if(imgData) setCardImage(item.id,imgData);
+      // 1순위: 로컬 IndexedDB 캐시
+      const localImg=await loadImg('img_'+item.id);
+      if(localImg){ setCardImage(item.id,localImg); continue; }
+      // 2순위: 서버 시트에서 불러오기
+      if(item.imageUrl && item.imageUrl.startsWith('__sheet__')){
+        loadImageFromServer(item.id);
       }
     }
   }
+}
+
+async function loadImageFromServer(itemId){
+  try {
+    const res=await fetch(GAS_URL+'?action=loadImage&itemId='+encodeURIComponent(itemId));
+    const data=await res.json();
+    if(data.data){
+      await saveImg('img_'+itemId, data.data); // 로컬에 캐시
+      setCardImage(itemId, data.data);
+    }
+  } catch(e){}
 }
 function setCardImage(itemId,data){
   const wrap=document.getElementById('cardImg_'+itemId);
@@ -932,13 +940,13 @@ async function handleImgUpload(itemId,input){
         body:JSON.stringify({itemId, imageBase64:base64, mimeType:file.type})
       });
       const data=await res.json();
-      if(data.success && data.url){
-        // 드라이브 URL을 품목 데이터에 저장
+      if(data.success){
+        // 시트 저장 완료 → imageUrl 마커 저장
         state.categories.forEach(cat=>{
           const item=cat.items.find(i=>i.id===itemId);
-          if(item){ item.imageUrl=data.url; }
+          if(item){ item.imageUrl='__sheet__'+itemId; }
         });
-        // 즉시 서버에 저장 (1.5초 기다리지 않고)
+        // 즉시 서버에 저장
         localStorage.setItem('jungbada_order_v4', JSON.stringify(state));
         localStorage.setItem('jungbada_order_v4_time', new Date().toISOString());
         await saveToServer();
