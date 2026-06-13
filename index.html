@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<!-- ✅ 3번: 더블탭 확대 방지 -->
+<meta name="HandheldFriendly" content="true">
 <title>정바다 발주</title>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 html,body{height:100%}
 body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue','Apple SD Gothic Neo',sans-serif;background:#f7f7f5;color:#1a1a1a;font-size:15px;overscroll-behavior:none}
 .header{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid #e8e8e5;padding:12px 16px 0}
@@ -52,37 +54,43 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue','Apple SD Got
 .card-img-placeholder .edit-hint{font-size:11px;color:#ccc;font-weight:500}
 .img-input{display:none}
 .card-body{padding:9px 11px 10px}
-.card-name-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.card-name-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
 .card-name{font-size:13.5px;font-weight:700;color:#1a1a1a;line-height:1.3;flex:1;cursor:pointer;border-radius:4px;padding:1px 3px;margin:-1px -3px;word-break:keep-all}
 .card-name:hover{background:#f0f0ee}
 .card-name-edit-wrap{display:none;flex-direction:column;gap:5px;margin-bottom:4px}
 .card-name-edit-wrap.show{display:flex}
 .card-name-input-edit{font-size:13.5px;font-weight:700;border:1.5px solid #1a1a1a;border-radius:6px;padding:4px 7px;font-family:inherit;outline:none;width:100%}
 .name-save-btn{font-size:12px;padding:4px 10px;border-radius:7px;border:none;background:#1a1a1a;color:#fff;cursor:pointer;font-family:inherit;align-self:flex-end}
+/* ✅ 5번: 번역 표시 - 줄바꿈 */
+.card-translation{font-size:10px;color:#aaa;line-height:1.5;margin-bottom:4px;min-height:0}
+.card-translation .tr-en{color:#888}
+.card-translation .tr-ne{color:#aaa}
 .card-edit-row{display:flex;align-items:center;gap:4px;margin-bottom:7px}
 .card-vendor-unit-text{font-size:11.5px;color:#bbb;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;border-radius:4px;padding:1px 3px}
 .card-vendor-unit-text:hover{background:#f0f0ee;color:#888}
+/* ✅ 1번/7번: 인라인 편집 팝업 - 드롭다운 제대로 작동 */
 .inline-edit-popup{position:absolute;left:0;right:0;bottom:50px;background:#fff;border:1.5px solid #e8e8e5;border-radius:12px;padding:12px;box-shadow:0 4px 20px rgba(0,0,0,0.12);z-index:35;display:none}
 .inline-edit-popup.show{display:block}
 .inline-edit-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.inline-edit-row:last-child{margin-bottom:0}
 .inline-edit-label{font-size:12px;color:#aaa;width:34px;flex-shrink:0;font-weight:600}
-.inline-edit-select{flex:1;padding:7px 10px;border:1.5px solid #e8e8e5;border-radius:7px;font-size:14px;font-family:inherit;background:#fff;outline:none;-webkit-appearance:none;appearance:none}
-.inline-save-btn{width:100%;margin-top:8px;padding:8px;border-radius:8px;border:none;background:#1a1a1a;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.inline-edit-select{flex:1;padding:9px 10px;border:1.5px solid #e8e8e5;border-radius:7px;font-size:15px;font-family:inherit;background:#fff;outline:none;color:#1a1a1a;-webkit-appearance:auto;appearance:auto;cursor:pointer}
+.inline-edit-select:focus{border-color:#1a1a1a}
+.inline-save-btn{width:100%;margin-top:8px;padding:10px;border-radius:8px;border:none;background:#1a1a1a;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+/* ✅ 4번: 수량 텍스트 입력 */
 .stepper{display:flex;align-items:center;justify-content:space-between;background:#f7f7f5;border-radius:8px;padding:3px}
-.step-btn{width:32px;height:32px;border:none;border-radius:6px;font-size:20px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;line-height:1}
+.step-btn{width:32px;height:32px;border:none;border-radius:6px;font-size:20px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;line-height:1;touch-action:manipulation}
 .step-btn.minus{background:#fee2e2;color:#dc2626}
 .step-btn.minus:active{background:#fecaca}
 .step-btn.plus{background:#dcfce7;color:#16a34a}
 .step-btn.plus:active{background:#bbf7d0}
-.step-val{font-size:15px;font-weight:800;min-width:28px;text-align:center;color:#bbb;border:1.5px dashed #e0e0e0;border-radius:6px;padding:2px 4px;transition:all 0.15s}
+.step-val{font-size:15px;font-weight:800;min-width:36px;text-align:center;color:#bbb;border:1.5px dashed #e0e0e0;border-radius:6px;padding:2px 4px;transition:all 0.15s;background:transparent;font-family:inherit;cursor:text;outline:none;-webkit-appearance:none}
 .step-val.is-manual{color:#16a34a;border:1.5px solid #16a34a;background:#f0fdf4}
 .step-val.is-auto{color:#3b82f6;border:1.5px solid #3b82f6;background:#eff6ff}
 .card-footer{display:flex;align-items:center;justify-content:space-between;padding:4px 8px 7px;border-top:1px solid #f5f5f3}
 .order-btns{display:flex;gap:3px}
-.order-btn{font-size:11px;color:#ccc;background:none;border:1px solid #e8e8e5;border-radius:4px;padding:2px 7px;cursor:pointer}
+.order-btn{font-size:11px;color:#ccc;background:none;border:1px solid #e8e8e5;border-radius:4px;padding:2px 7px;cursor:pointer;touch-action:manipulation}
 .order-btn:active{background:#f0f0ee}
-.card-menu-btn{font-size:16px;color:#ccc;background:none;border:none;cursor:pointer;padding:1px 4px}
+.card-menu-btn{font-size:16px;color:#ccc;background:none;border:none;cursor:pointer;padding:1px 4px;touch-action:manipulation}
 .card-menu-btn:hover{color:#888}
 .card-menu-popup{position:absolute;right:6px;bottom:36px;background:#fff;border:1.5px solid #e8e8e5;border-radius:10px;padding:4px;box-shadow:0 4px 16px rgba(0,0,0,0.12);z-index:30;display:none;min-width:160px}
 .card-menu-popup.show{display:block}
@@ -90,7 +98,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue','Apple SD Got
 .card-menu-item:hover{background:#f5f5f3}
 .card-menu-item.danger{color:#dc2626}
 .card-menu-item.danger:hover{background:#fee2e2}
-.card-translation{font-size:10px;color:#aaa;line-height:1.4;margin-bottom:5px;min-height:14px}
 .add-item-row{margin-top:10px}
 .add-item-btn{width:100%;padding:12px;border:1.5px dashed #d0d0ce;border-radius:11px;font-size:14px;font-weight:600;background:#fafaf8;cursor:pointer;color:#aaa;font-family:inherit}
 .add-item-btn:active{background:#f0f0ee}
@@ -115,9 +122,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue','Apple SD Got
 .add-modal-field label{display:block;font-size:12px;font-weight:700;color:#888;margin-bottom:7px;text-transform:uppercase;letter-spacing:0.04em}
 .add-modal-input{width:100%;padding:12px 13px;border:1.5px solid #e8e8e5;border-radius:10px;font-size:16px;font-family:inherit;background:#fff;outline:none;color:#1a1a1a}
 .add-modal-input:focus{border-color:#999}
-.add-modal-select{width:100%;padding:12px 13px;border:1.5px solid #e8e8e5;border-radius:10px;font-size:16px;font-family:inherit;background:#fff;outline:none;color:#1a1a1a;-webkit-appearance:none}
+.add-modal-select{width:100%;padding:12px 13px;border:1.5px solid #e8e8e5;border-radius:10px;font-size:16px;font-family:inherit;background:#fff;outline:none;color:#1a1a1a}
 .unit-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-.unit-chip{padding:9px 4px;text-align:center;border:1.5px solid #e8e8e5;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;background:#fff;color:#666}
+.unit-chip{padding:9px 4px;text-align:center;border:1.5px solid #e8e8e5;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;background:#fff;color:#666;touch-action:manipulation}
 .unit-chip.selected{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
 .order-preview-block{background:#f7f7f5;border-radius:10px;padding:12px;margin-bottom:10px;border:1px solid #e8e8e5}
 .order-vendor-name{font-size:13px;font-weight:700;color:#888;margin-bottom:4px;display:flex;align-items:center;gap:6px}
@@ -163,16 +170,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue','Apple SD Got
 .move-section-item{padding:10px 14px;border:1.5px solid #e8e8e5;border-radius:9px;margin-bottom:6px;cursor:pointer;font-size:14px;font-weight:600;background:#fafaf8}
 .move-section-item:hover{background:#f0f0ee}
 .bottom-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(247,247,245,0.95);backdrop-filter:blur(10px);border-top:1px solid #e8e8e5;padding:10px 16px 22px;display:flex;gap:10px;z-index:40}
-.btn-draft{flex:1;padding:13px;border:1.5px solid #e8e8e5;border-radius:12px;font-size:15px;font-weight:700;background:#fff;cursor:pointer;font-family:inherit;color:#666}
+.btn-draft{flex:1;padding:13px;border:1.5px solid #e8e8e5;border-radius:12px;font-size:15px;font-weight:700;background:#fff;cursor:pointer;font-family:inherit;color:#666;touch-action:manipulation}
 .btn-draft:active{background:#f0f0ee}
-.btn-order{flex:2;padding:13px;border:none;border-radius:12px;font-size:15px;font-weight:700;background:#d1d5db;cursor:pointer;font-family:inherit;color:#fff;transition:background 0.15s}
+.btn-order{flex:2;padding:13px;border:none;border-radius:12px;font-size:15px;font-weight:700;background:#d1d5db;cursor:pointer;font-family:inherit;color:#fff;transition:background 0.15s;touch-action:manipulation}
 .btn-order.ready{background:#1a1a1a}
 @keyframes pulse-highlight{0%{box-shadow:0 0 0 0 rgba(245,158,11,0.4)}70%{box-shadow:0 0 0 8px rgba(245,158,11,0)}100%{box-shadow:0 0 0 0 rgba(245,158,11,0)}}
 .item-card.highlighted{animation:pulse-highlight 1s ease-out}
 </style>
 </head>
 <body>
-
 <div class="header">
   <div class="header-top">
     <h1>🐟 정바다 발주</h1>
@@ -185,79 +191,32 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue','Apple SD Got
   </div>
   <div class="tab-bar" id="tabBar"></div>
 </div>
-
 <div class="content" id="mainContent"></div>
-
 <div class="bottom-bar" id="bottomBar">
   <button class="btn-draft" onclick="saveDraft()">임시 저장</button>
   <button class="btn-order" id="orderBtn" onclick="openOrderModal()">발주 확정 →</button>
 </div>
 
-<div class="modal-bg" id="deleteModal">
-  <div class="modal"><div class="modal-handle"></div><h3>품목 삭제</h3>
-    <p style="font-size:14px;color:#666;line-height:1.6" id="deleteMsg"></p>
-    <div class="modal-actions"><button class="modal-btn" onclick="closeModal('deleteModal')">취소</button><button class="modal-btn danger" onclick="confirmDelete()">삭제</button></div>
-  </div>
-</div>
-<div class="modal-bg" id="vendorDeleteModal">
-  <div class="modal"><div class="modal-handle"></div><h3>업체 삭제</h3>
-    <p style="font-size:14px;color:#666;line-height:1.6" id="vendorDeleteMsg"></p>
-    <div class="modal-actions"><button class="modal-btn" onclick="closeModal('vendorDeleteModal')">취소</button><button class="modal-btn danger" onclick="confirmVendorDelete()">삭제</button></div>
-  </div>
-</div>
-<div class="modal-bg" id="addItemModal">
-  <div class="modal"><div class="modal-handle"></div><h3>품목 추가</h3>
-    <div id="addModalBody"></div>
-    <div class="modal-actions"><button class="modal-btn" onclick="closeModal('addItemModal')">취소</button><button class="modal-btn confirm" onclick="confirmAddItem()">추가</button></div>
-  </div>
-</div>
-<div class="modal-bg" id="orderModal">
-  <div class="modal"><div class="modal-handle"></div><h3>발주 확정</h3>
-    <p style="font-size:13px;color:#888;margin-bottom:12px">수량이 입력된 품목으로 업체별 문자 발송</p>
-    <div id="orderPreview"></div><div id="sendStatus"></div>
-    <div class="modal-actions"><button class="modal-btn" onclick="closeModal('orderModal')">취소</button><button class="modal-btn confirm" id="sendBtn" onclick="sendOrder()">문자 발송</button></div>
-  </div>
-</div>
-<div class="modal-bg" id="smsConfirmModal">
-  <div class="modal"><div class="modal-handle"></div><h3>문자 설정 변경</h3>
-    <p style="font-size:14px;color:#666;line-height:1.6" id="smsConfirmMsg"></p>
-    <div class="modal-actions"><button class="modal-btn" onclick="closeModal('smsConfirmModal')">취소</button><button class="modal-btn confirm" onclick="confirmSmsToggle()">변경</button></div>
-  </div>
-</div>
-<div class="modal-bg" id="moveCatModal">
-  <div class="modal"><div class="modal-handle"></div><h3>카테고리 이동</h3>
-    <p style="font-size:13px;color:#888;margin-bottom:12px" id="moveCatItemName"></p>
-    <div id="moveCatList"></div>
-    <div class="modal-actions"><button class="modal-btn" onclick="closeModal('moveCatModal')">취소</button></div>
-  </div>
-</div>
-<div class="modal-bg" id="moveSectionModal">
-  <div class="modal"><div class="modal-handle"></div><h3>섹션 이동</h3>
-    <p style="font-size:13px;color:#888;margin-bottom:12px" id="moveSectionItemName"></p>
-    <div id="moveSectionList"></div>
-    <div class="modal-actions"><button class="modal-btn" onclick="closeModal('moveSectionModal')">취소</button></div>
-  </div>
-</div>
-<div class="modal-bg" id="translateModal">
-  <div class="modal" style="padding-bottom:20px"><div class="modal-handle"></div><h3>번역 중...</h3>
-    <p style="font-size:14px;color:#888" id="translateStatus">품목명을 번역하고 있습니다</p>
-  </div>
-</div>
+<div class="modal-bg" id="deleteModal"><div class="modal"><div class="modal-handle"></div><h3>품목 삭제</h3><p style="font-size:14px;color:#666;line-height:1.6" id="deleteMsg"></p><div class="modal-actions"><button class="modal-btn" onclick="closeModal('deleteModal')">취소</button><button class="modal-btn danger" onclick="confirmDelete()">삭제</button></div></div></div>
+<div class="modal-bg" id="vendorDeleteModal"><div class="modal"><div class="modal-handle"></div><h3>업체 삭제</h3><p style="font-size:14px;color:#666;line-height:1.6" id="vendorDeleteMsg"></p><div class="modal-actions"><button class="modal-btn" onclick="closeModal('vendorDeleteModal')">취소</button><button class="modal-btn danger" onclick="confirmVendorDelete()">삭제</button></div></div></div>
+<div class="modal-bg" id="addItemModal"><div class="modal"><div class="modal-handle"></div><h3>품목 추가</h3><div id="addModalBody"></div><div class="modal-actions"><button class="modal-btn" onclick="closeModal('addItemModal')">취소</button><button class="modal-btn confirm" onclick="confirmAddItem()">추가</button></div></div></div>
+<div class="modal-bg" id="orderModal"><div class="modal"><div class="modal-handle"></div><h3>발주 확정</h3><p style="font-size:13px;color:#888;margin-bottom:12px">수량이 입력된 품목으로 업체별 문자 발송</p><div id="orderPreview"></div><div id="sendStatus"></div><div class="modal-actions"><button class="modal-btn" onclick="closeModal('orderModal')">취소</button><button class="modal-btn confirm" id="sendBtn" onclick="sendOrder()">문자 발송</button></div></div></div>
+<div class="modal-bg" id="smsConfirmModal"><div class="modal"><div class="modal-handle"></div><h3>문자 설정 변경</h3><p style="font-size:14px;color:#666;line-height:1.6" id="smsConfirmMsg"></p><div class="modal-actions"><button class="modal-btn" onclick="closeModal('smsConfirmModal')">취소</button><button class="modal-btn confirm" onclick="confirmSmsToggle()">변경</button></div></div></div>
+<div class="modal-bg" id="moveCatModal"><div class="modal"><div class="modal-handle"></div><h3>카테고리 이동</h3><p style="font-size:13px;color:#888;margin-bottom:12px" id="moveCatItemName"></p><div id="moveCatList"></div><div class="modal-actions"><button class="modal-btn" onclick="closeModal('moveCatModal')">취소</button></div></div></div>
+<div class="modal-bg" id="moveSectionModal"><div class="modal"><div class="modal-handle"></div><h3>섹션 이동</h3><p style="font-size:13px;color:#888;margin-bottom:12px" id="moveSectionItemName"></p><div id="moveSectionList"></div><div class="modal-actions"><button class="modal-btn" onclick="closeModal('moveSectionModal')">취소</button></div></div></div>
 
 <script>
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbyfOVcR87ttVMtreYZgcSJidtZtTPYtBCNOVcOSjeXcqQQ1qyKzKeU5WyF8Fgh6s8I5/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzmdAm9Yeo0Ao8G2NJZjCahoOUw11PIpnROWHQHz3mf1FYUuKKBKNRjJUXJ4dgjNcVe/exec';
 const UNITS = ['개','봉','병','단','망','kg','g','박스','팩','판','통','장','묶음','포','마리'];
-
 const INGREDIENT_ZONES = [
-  {id:'z_freezer', name:'❄️ 냉동고',   items:['i1','i2','i3','i4','i5','i6','i7','i8','i9','i10']},
-  {id:'z_oroshi',  name:'🔪 오로시',   items:['i11','i12','i13','i14','i16','i17','i18','i19']},
-  {id:'z_aging',   name:'🧊 숙성고',   items:['i15','i20','i21']},
-  {id:'z_pantry',  name:'🫙 간택기',   items:['i22','i23','i24','i25','i26','i27','i28','i29']},
-  {id:'z_vegfridge',name:'🥬 야채냉',  items:['i30','i31','i32','i33','i34','i35','i36','i37','i38','i39']},
-  {id:'z_shelf',   name:'📦 앵글',     items:['i40','i41','i42','i43','i44','i45']},
-  {id:'z_showcase',name:'🍱 쇼케이스', items:['i46','i47','i48','i49','i50','i51','i52','i53','i54']},
+  {id:'z_freezer',name:'❄️ 냉동고',items:['i1','i2','i3','i4','i5','i6','i7','i8','i9','i10']},
+  {id:'z_oroshi',name:'🔪 오로시',items:['i11','i12','i13','i14','i16','i17','i18','i19']},
+  {id:'z_aging',name:'🧊 숙성고',items:['i15','i20','i21']},
+  {id:'z_pantry',name:'🫙 간택기',items:['i22','i23','i24','i25','i26','i27','i28','i29']},
+  {id:'z_vegfridge',name:'🥬 야채냉',items:['i30','i31','i32','i33','i34','i35','i36','i37','i38','i39']},
+  {id:'z_shelf',name:'📦 앵글',items:['i40','i41','i42','i43','i44','i45']},
+  {id:'z_showcase',name:'🍱 쇼케이스',items:['i46','i47','i48','i49','i50','i51','i52','i53','i54']},
 ];
-
 const DEFAULT_DATA = {
   managers:{phone1:'',phone1name:'관리자1',phone2:'',phone2name:'관리자2'},
   vendors:[
@@ -404,14 +363,13 @@ const DEFAULT_DATA = {
   ]
 };
 
-// ── IndexedDB (로컬 캐시용) ──
-let imgDB = null;
+// ── IndexedDB ──
+let imgDB=null;
 function openImgDB(){return new Promise((res,rej)=>{const req=indexedDB.open('jungbada_imgs',1);req.onupgradeneeded=e=>e.target.result.createObjectStore('images');req.onsuccess=e=>{imgDB=e.target.result;res(imgDB)};req.onerror=()=>rej()})}
 async function saveImg(id,data){const db=imgDB||await openImgDB();return new Promise(res=>{const tx=db.transaction('images','readwrite');tx.objectStore('images').put(data,id);tx.oncomplete=()=>res()})}
 async function loadImg(id){const db=imgDB||await openImgDB();return new Promise(res=>{const tx=db.transaction('images','readonly');const req=tx.objectStore('images').get(id);req.onsuccess=()=>res(req.result||null);req.onerror=()=>res(null)})}
 
-// ── 이미지 리사이즈 ──
-function resizeImage(file, maxSize){
+function resizeImage(file,maxSize){
   return new Promise(resolve=>{
     const reader=new FileReader();
     reader.onload=e=>{
@@ -419,8 +377,7 @@ function resizeImage(file, maxSize){
       img.onload=()=>{
         const canvas=document.createElement('canvas');
         let w=img.width,h=img.height;
-        if(w>h&&w>maxSize){h=h*maxSize/w;w=maxSize;}
-        else if(h>maxSize){w=w*maxSize/h;h=maxSize;}
+        if(w>h&&w>maxSize){h=h*maxSize/w;w=maxSize;}else if(h>maxSize){w=w*maxSize/h;h=maxSize;}
         canvas.width=w;canvas.height=h;
         canvas.getContext('2d').drawImage(img,0,0,w,h);
         resolve(canvas.toDataURL('image/jpeg',0.85));
@@ -431,46 +388,56 @@ function resizeImage(file, maxSize){
   });
 }
 
+// ── 번역 캐시 ──
+let translationsCache = {};
+async function loadTranslations(){
+  try{
+    const res=await fetch(GAS_URL+'?action=loadTranslations');
+    const data=await res.json();
+    if(data.data) translationsCache=data.data;
+  }catch(e){}
+}
+function getTranslation(itemId){return translationsCache[itemId]||null;}
+
 // ── 상태 관리 ──
-let state = loadState();
-let activeCat = state.categories[0].id;
-let pendingDel = {cat:null,item:null};
-let pendingVendorDel = null;
-let pendingSmsToggle = {idx:null};
-let addModalCatId = null;
-let addModalZoneId = null;
-let selectedUnit = '개';
-let pendingMoveCat = {catId:null,itemId:null};
-let pendingMoveSection = {catId:null,itemId:null};
+let state=loadState();
+let activeCat=state.categories[0].id;
+let pendingDel={cat:null,item:null};
+let pendingVendorDel=null;
+let pendingSmsToggle={idx:null};
+let addModalCatId=null;
+let addModalZoneId=null;
+let selectedUnit='개';
+let pendingMoveCat={catId:null,itemId:null};
+let pendingMoveSection={catId:null,itemId:null};
 
 function migrateState(p){
-  if(!p.managers) p.managers=DEFAULT_DATA.managers;
+  if(!p.managers)p.managers=DEFAULT_DATA.managers;
   p.categories.forEach(cat=>{
     cat.items.forEach(item=>{
-      if(item.autoOrder===undefined) item.autoOrder=false;
-      if(item.inactive===undefined) item.inactive=false;
-      if(item.manualQty===undefined) item.manualQty=false;
-      if(!item.orders) item.orders=[];
-      if(!item.translations) item.translations={};
+      if(item.autoOrder===undefined)item.autoOrder=false;
+      if(item.inactive===undefined)item.inactive=false;
+      if(item.manualQty===undefined)item.manualQty=false;
+      if(!item.orders)item.orders=[];
+      if(!item.translations)item.translations={};
     });
   });
   p.vendors.forEach(v=>{
-    if(v.contact===undefined) v.contact='';
-    if(v.link===undefined) v.link='';
-    if(v.vid===undefined) v.vid='';
-    if(v.pw===undefined) v.pw='';
-    if(v.suffix===undefined) v.suffix='';
+    if(v.contact===undefined)v.contact='';
+    if(v.link===undefined)v.link='';
+    if(v.vid===undefined)v.vid='';
+    if(v.pw===undefined)v.pw='';
+    if(v.suffix===undefined)v.suffix='';
   });
   const cats=p.categories;
   const pkgIdx=cats.findIndex(c=>c.id==='packaging');
   const alcIdx=cats.findIndex(c=>c.id==='alcohol');
   if(pkgIdx>alcIdx&&pkgIdx!==-1&&alcIdx!==-1){const[pkg]=cats.splice(pkgIdx,1);cats.splice(alcIdx,0,pkg);}
-  if(!p.categories.find(c=>c.id==='welfare')) p.categories.push(DEFAULT_DATA.categories.find(c=>c.id==='welfare'));
+  if(!p.categories.find(c=>c.id==='welfare'))p.categories.push(DEFAULT_DATA.categories.find(c=>c.id==='welfare'));
   return p;
 }
-
 function loadState(){
-  try{const s=localStorage.getItem('jungbada_order_v4');if(s){return migrateState(JSON.parse(s));}}catch(e){}
+  try{const s=localStorage.getItem('jungbada_order_v4');if(s)return migrateState(JSON.parse(s));}catch(e){}
   const d=JSON.parse(JSON.stringify(DEFAULT_DATA));
   const cats=d.categories;
   const pkgIdx=cats.findIndex(c=>c.id==='packaging');
@@ -479,22 +446,15 @@ function loadState(){
   return d;
 }
 
-let lastServerTime = null;
+let lastServerTime=null;
 
-function applyServerData(serverData, silent){
-  const qtyMap={};
-  state.categories.forEach(cat=>{cat.items.forEach(item=>{if(item.qty>0)qtyMap[item.id]=item.qty;});});
-  const openMap={};
-  state.categories.forEach(cat=>{openMap[cat.id]=cat.open;});
-  state.categories=serverData.categories.map(cat=>({
-    ...cat,
-    open:openMap[cat.id]!==undefined?openMap[cat.id]:cat.open,
-    items:cat.items.map(item=>({...item,qty:qtyMap[item.id]||0}))
-  }));
+function applyServerData(serverData,silent){
+  // ✅ 6번: 수량도 서버에서 받아서 반영 (로컬 수량은 버림 - 한명씩 사용)
+  state.categories=serverData.categories.map(cat=>({...cat}));
   state.vendors=serverData.vendors||state.vendors;
   localStorage.setItem('jungbada_order_v4',JSON.stringify(state));
   renderTabs();renderContent();
-  if(!silent) showSyncNotice('🔄 다른 기기의 변경사항이 반영됐습니다');
+  if(!silent)showSyncNotice('🔄 다른 기기의 변경사항이 반영됐습니다');
 }
 
 async function syncFromServer(){
@@ -512,7 +472,7 @@ async function pollServer(){
   try{
     const res=await fetch(GAS_URL+'?action=loadAppData');
     const json=await res.json();
-    if(!json.data) return;
+    if(!json.data)return;
     const serverTime=json.updatedAt||null;
     if(serverTime&&serverTime!==lastServerTime){lastServerTime=serverTime;applyServerData(json.data,false);}
   }catch(e){}
@@ -530,22 +490,19 @@ function save(){
   clearTimeout(save._t);
   save._t=setTimeout(saveToServer,800);
 }
-
 function saveNow(){
   localStorage.setItem('jungbada_order_v4',JSON.stringify(state));
   localStorage.setItem('jungbada_order_v4_time',new Date().toISOString());
   clearTimeout(save._t);saveToServer();
 }
-
 async function saveToServer(){
   try{
     const payload={categories:state.categories,vendors:state.vendors};
     const res=await fetch(GAS_URL+'?action=saveAppData',{method:'POST',body:JSON.stringify(payload)});
     const data=await res.json();
-    if(data.success&&data.updatedAt) lastServerTime=data.updatedAt;
+    if(data.success&&data.updatedAt)lastServerTime=data.updatedAt;
   }catch(e){}
 }
-
 function saveDraft(){
   save();
   document.getElementById('draftBadge').classList.add('show');
@@ -556,20 +513,10 @@ function saveDraft(){
 
 function today(){return new Date().toISOString().slice(0,10)}
 function daysSince(d){if(!d)return null;return Math.floor((new Date(today())-new Date(d))/864e5)}
-
 function getSuggest(item,catId){
-  if(catId==='seafood'){
-    const ds=daysSince(item.lastOrder);
-    if(ds===null) return {type:'today',label:'첫 발주'};
-    if(ds>=1) return {type:'today',label:'오늘'};
-    return {type:'ok',label:'D-1'};
-  }
-  const ds=daysSince(item.lastOrder);
-  if(ds===null) return {type:'today',label:'첫 발주'};
-  const rem=item.cycle-ds;
-  if(rem<=0) return {type:'today',label:'오늘'};
-  if(rem<=3) return {type:'soon',label:'D-'+rem};
-  return {type:'ok',label:'D-'+rem};
+  if(catId==='seafood'){const ds=daysSince(item.lastOrder);if(ds===null)return{type:'today',label:'첫 발주'};if(ds>=1)return{type:'today',label:'오늘'};return{type:'ok',label:'D-1'};}
+  const ds=daysSince(item.lastOrder);if(ds===null)return{type:'today',label:'첫 발주'};
+  const rem=item.cycle-ds;if(rem<=0)return{type:'today',label:'오늘'};if(rem<=3)return{type:'soon',label:'D-'+rem};return{type:'ok',label:'D-'+rem};
 }
 
 function renderTabs(){
@@ -590,8 +537,8 @@ function renderContent(){
     if(cat.id==='ingredient'){
       const zoneMap={};INGREDIENT_ZONES.forEach(z=>{zoneMap[z.id]=[];});const unzoned=[];
       activeItems.forEach(item=>{let placed=false;for(const z of INGREDIENT_ZONES){if(z.items.includes(item.id)){zoneMap[z.id].push(item);placed=true;break}}if(!placed)unzoned.push(item);});
-      INGREDIENT_ZONES.forEach(zone=>{const zItems=zoneMap[zone.id];if(!zItems.length)return;div.appendChild(buildZoneSection(cat.id,zone.id,zone.name,zItems,true));});
-      if(unzoned.length>0) div.appendChild(buildZoneSection(cat.id,'z_extra','📌 기타',unzoned,true));
+      INGREDIENT_ZONES.forEach(zone=>{const zi=zoneMap[zone.id];if(!zi.length)return;div.appendChild(buildZoneSection(cat.id,zone.id,zone.name,zi,true));});
+      if(unzoned.length>0)div.appendChild(buildZoneSection(cat.id,'z_extra','📌 기타',unzoned,true));
     }else{
       const grid=document.createElement('div');grid.className='card-grid';
       activeItems.forEach((item,idx)=>grid.appendChild(createItemCard(cat.id,item,idx,activeItems.length)));
@@ -639,14 +586,17 @@ function createItemCard(catId,item,idx,total,isInactive=false){
   card.id='card_'+item.id;
   const s=getSuggest(item,catId);
   const ddayClass={today:'dday-today',soon:'dday-soon',ok:'dday-ok'}[s.type]||'dday-first';
-  const displayQty=item.qty;
+  const displayQty=item.qty||0;
   let valClass='step-val';
-  if(displayQty>0) valClass=item.autoOrder?'step-val is-auto':'step-val is-manual';
-  const tr=item.translations||{};
-  const trText=tr.en||tr.ne?`${tr.en||''}${tr.en&&tr.ne?' / ':''}${tr.ne||''}`:'';
+  if(displayQty>0)valClass=item.autoOrder?'step-val is-auto':'step-val is-manual';
+
+  // ✅ 5번: 번역 시트에서 가져오기
+  const tr=getTranslation(item.id)||item.translations||{};
+  const trHTML=(tr.en||tr.ne)?`<div class="card-translation">${tr.en?`<span class="tr-en">${tr.en}</span>`:''}${tr.en&&tr.ne?'<br>':''}${tr.ne?`<span class="tr-ne">${tr.ne}</span>`:''}</div>`:'';
+
   card.innerHTML=`
     <div class="dday-badge ${ddayClass}">${s.label}</div>
-    ${item.autoOrder?'<div class="auto-badge show">자동</div>':'<div class="auto-badge"></div>'}
+    ${item.autoOrder?'<div class="auto-badge show">자동</div>':''}
     <div class="card-img" id="cardImg_${item.id}" onclick="triggerImgUpload('${item.id}')">
       <div class="card-img-placeholder"><span class="emoji">${getCatEmoji(catId)}</span><span class="edit-hint">📷 사진 추가</span></div>
     </div>
@@ -657,9 +607,16 @@ function createItemCard(catId,item,idx,total,isInactive=false){
         <input class="card-name-input-edit" id="nameInput_${item.id}" value="${item.name}">
         <button class="name-save-btn" onclick="saveEditName('${catId}','${item.id}')">저장</button>
       </div>
-      ${trText?`<div class="card-translation">${trText}</div>`:`<div class="card-translation" id="tr_${item.id}"></div>`}
+      ${trHTML}
       <div class="card-edit-row"><span class="card-vendor-unit-text" id="vendorUnit_${item.id}" onclick="toggleInlineEdit(event,'${catId}','${item.id}')">${item.vendor} · ${item.unit}</span></div>
-      ${!isInactive?`<div class="stepper"><button class="step-btn minus" onclick="stepQty('${catId}','${item.id}',-1)">−</button><span class="${valClass}" id="val_${item.id}">${displayQty}</span><button class="step-btn plus" onclick="stepQty('${catId}','${item.id}',1)">+</button></div>`:''}
+      ${!isInactive?`<div class="stepper">
+        <button class="step-btn minus" onclick="stepQty('${catId}','${item.id}',-1)">−</button>
+        <input type="number" inputmode="numeric" class="${valClass}" id="val_${item.id}" value="${displayQty}" min="0"
+          onchange="setQtyDirect('${catId}','${item.id}',this.value)"
+          onfocus="this.select()"
+          style="width:44px;border:${displayQty>0?(item.autoOrder?'1.5px solid #3b82f6':'1.5px solid #16a34a'):'1.5px dashed #e0e0e0'};background:${displayQty>0?(item.autoOrder?'#eff6ff':'#f0fdf4'):'transparent'};color:${displayQty>0?(item.autoOrder?'#3b82f6':'#16a34a'):'#bbb'}">
+        <button class="step-btn plus" onclick="stepQty('${catId}','${item.id}',1)">+</button>
+      </div>`:''}
     </div>
     <div class="card-footer">
       <div class="order-btns">
@@ -674,13 +631,22 @@ function createItemCard(catId,item,idx,total,isInactive=false){
         :`<button class="card-menu-item" onclick="toggleAutoOrder('${catId}','${item.id}');closeAllMenus()">${item.autoOrder?'🔵 자동발주 OFF':'⚪ 자동발주 ON'}</button>
           <button class="card-menu-item" onclick="openMoveCat('${catId}','${item.id}');closeAllMenus()">📂 카테고리 이동</button>
           ${catId==='ingredient'?`<button class="card-menu-item" onclick="openMoveSection('${catId}','${item.id}');closeAllMenus()">📌 섹션 이동</button>`:''}
-          <button class="card-menu-item" onclick="translateItem('${catId}','${item.id}');closeAllMenus()">🌐 번역 (영어/네팔어)</button>
           <button class="card-menu-item" onclick="toggleInactive('${catId}','${item.id}',true);closeAllMenus()">🚫 미사용으로</button>`}
       <button class="card-menu-item danger" onclick="askDelete('${catId}','${item.id}');closeAllMenus()">🗑 삭제</button>
     </div>
     <div class="inline-edit-popup" id="inlineEdit_${item.id}">
-      <div class="inline-edit-row"><span class="inline-edit-label">업체</span><select class="inline-edit-select" id="vendorSel_${item.id}">${state.vendors.map(v=>`<option${v.name===item.vendor?' selected':''}>${v.name}</option>`).join('')}</select></div>
-      <div class="inline-edit-row"><span class="inline-edit-label">단위</span><select class="inline-edit-select" id="unitSel_${item.id}">${UNITS.map(u=>`<option${u===item.unit?' selected':''}>${u}</option>`).join('')}</select></div>
+      <div class="inline-edit-row">
+        <span class="inline-edit-label">업체</span>
+        <select class="inline-edit-select" id="vendorSel_${item.id}" size="1">
+          ${state.vendors.map(v=>`<option value="${v.name}"${v.name===item.vendor?' selected':''}>${v.name}</option>`).join('')}
+        </select>
+      </div>
+      <div class="inline-edit-row">
+        <span class="inline-edit-label">단위</span>
+        <select class="inline-edit-select" id="unitSel_${item.id}" size="1">
+          ${UNITS.map(u=>`<option value="${u}"${u===item.unit?' selected':''}>${u}</option>`).join('')}
+        </select>
+      </div>
       <button class="inline-save-btn" onclick="saveInlineEdit('${catId}','${item.id}')">저장</button>
     </div>`;
   return card;
@@ -688,63 +654,42 @@ function createItemCard(catId,item,idx,total,isInactive=false){
 
 function getCatEmoji(catId){return({seafood:'🐟',ingredient:'🥬',alcohol:'🍺',packaging:'📦',etc:'🧹',welfare:'🎁'})[catId]||'📦'}
 
-// ── 이미지 처리 (드라이브 URL 방식) ──
+// ── 이미지 ──
 async function renderAllImages(){
   const cats=activeCat==='settings'?[]:[state.categories.find(c=>c.id===activeCat)].filter(Boolean);
   for(const cat of cats){
     for(const item of cat.items){
-      if(item.imageUrl && !item.imageUrl.startsWith('__sheet__')){
-        // ✅ 드라이브 URL 방식 - 그냥 바로 표시
-        setCardImage(item.id, item.imageUrl);
-      } else {
-        // 로컬 IndexedDB 캐시 확인 (이전에 업로드한 이미지)
+      if(item.imageUrl&&!item.imageUrl.startsWith('__sheet__')){
+        setCardImage(item.id,item.imageUrl);
+      }else{
         const localImg=await loadImg('img_'+item.id);
-        if(localImg) setCardImage(item.id,localImg);
+        if(localImg)setCardImage(item.id,localImg);
       }
     }
   }
 }
-
-function setCardImage(itemId, src){
+function setCardImage(itemId,src){
   const wrap=document.getElementById('cardImg_'+itemId);
-  if(!wrap) return;
+  if(!wrap)return;
   wrap.innerHTML=`<img src="${src}" alt="" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.innerHTML='<div class=card-img-placeholder><span class=emoji>📷</span><span class=edit-hint>이미지 오류</span></div>'">`;
 }
-
 function triggerImgUpload(itemId){document.getElementById('imgInput_'+itemId)?.click()}
-
-async function handleImgUpload(itemId, input){
-  const file=input.files[0];
-  if(!file) return;
-
-  // 리사이즈 후 로컬에 미리 표시
+async function handleImgUpload(itemId,input){
+  const file=input.files[0];if(!file)return;
   const resized=await resizeImage(file,800);
-  setCardImage(itemId, resized);
-  await saveImg('img_'+itemId, resized); // 로컬 캐시 저장
-
+  setCardImage(itemId,resized);
+  await saveImg('img_'+itemId,resized);
   showSyncNotice('📷 사진 업로드 중...');
-
   try{
-    const res=await fetch(GAS_URL+'?action=uploadImage',{
-      method:'POST',
-      body:JSON.stringify({itemId, imageBase64:resized, mimeType:file.type})
-    });
+    const res=await fetch(GAS_URL+'?action=uploadImage',{method:'POST',body:JSON.stringify({itemId,imageBase64:resized,mimeType:file.type})});
     const data=await res.json();
-    if(data.success && data.url){
-      // ✅ 드라이브 URL을 item.imageUrl에 저장
-      state.categories.forEach(cat=>{
-        const item=cat.items.find(i=>i.id===itemId);
-        if(item) item.imageUrl=data.url;
-      });
+    if(data.success&&data.url){
+      state.categories.forEach(cat=>{const item=cat.items.find(i=>i.id===itemId);if(item)item.imageUrl=data.url;});
       localStorage.setItem('jungbada_order_v4',JSON.stringify(state));
-      await saveToServer(); // 다른 기기에서도 URL로 불러올 수 있도록
-      showSyncNotice('✅ 사진 업로드 완료 - 다른 기기에서도 보입니다');
-    }else{
-      showSyncNotice('⚠️ 업로드 실패: '+(data.error||'알 수 없는 오류'));
-    }
-  }catch(err){
-    showSyncNotice('⚠️ 서버 연결 실패 (로컬에만 표시됨)');
-  }
+      await saveToServer();
+      showSyncNotice('✅ 사진 업로드 완료');
+    }else showSyncNotice('⚠️ 업로드 실패');
+  }catch(err){showSyncNotice('⚠️ 서버 연결 실패');}
 }
 
 // ── 섹션명 편집 ──
@@ -752,8 +697,7 @@ function startEditZone(zoneId,currentName){
   document.getElementById('zoneTitle_'+zoneId).style.display='none';
   const input=document.getElementById('zoneTitleInput_'+zoneId);
   const btn=document.getElementById('zoneSaveBtn_'+zoneId);
-  input.style.display='block';btn.style.display='inline-block';
-  input.focus();input.select();
+  input.style.display='block';btn.style.display='inline-block';input.focus();input.select();
 }
 function cancelEditZone(zoneId){
   document.getElementById('zoneTitle_'+zoneId).style.display='';
@@ -764,9 +708,9 @@ function saveZoneName(catId,zoneId){
   const input=document.getElementById('zoneTitleInput_'+zoneId);
   const val=input?.value.trim();if(!val)return;
   const zone=INGREDIENT_ZONES.find(z=>z.id===zoneId);
-  if(zone) zone.name=val;
+  if(zone)zone.name=val;
   const titleEl=document.getElementById('zoneTitle_'+zoneId);
-  if(titleEl) titleEl.textContent=val;
+  if(titleEl)titleEl.textContent=val;
   cancelEditZone(zoneId);
 }
 
@@ -786,45 +730,37 @@ function saveEditName(catId,itemId){
   document.getElementById('nameEditWrap_'+itemId).classList.remove('show');
 }
 
-// ── 업체/단위 인라인 편집 ──
+// ✅ 1번/7번: 인라인 편집 - 클릭 이벤트 방지 수정
 function toggleInlineEdit(e,catId,itemId){
-  e.stopPropagation();closeAllMenus();
+  e.stopPropagation();
+  closeAllMenus();
   const popup=document.getElementById('inlineEdit_'+itemId);
   if(!popup)return;
   const isShowing=popup.classList.contains('show');
   document.querySelectorAll('.inline-edit-popup').forEach(p=>p.classList.remove('show'));
-  if(!isShowing) popup.classList.add('show');
+  if(!isShowing){
+    popup.classList.add('show');
+    // select 클릭이 popup을 닫지 않도록
+    popup.addEventListener('click',e=>e.stopPropagation(),{once:false});
+  }
 }
 function saveInlineEdit(catId,itemId){
-  const vendor=document.getElementById('vendorSel_'+itemId)?.value;
-  const unit=document.getElementById('unitSel_'+itemId)?.value;
+  const vendorEl=document.getElementById('vendorSel_'+itemId);
+  const unitEl=document.getElementById('unitSel_'+itemId);
+  const vendor=vendorEl?.value;
+  const unit=unitEl?.value;
   const item=state.categories.find(c=>c.id===catId)?.items.find(i=>i.id===itemId);
-  if(item){if(vendor)item.vendor=vendor;if(unit)item.unit=unit;save();}
+  if(item){
+    if(vendor)item.vendor=vendor;
+    if(unit)item.unit=unit;
+    save();
+  }
   const el=document.getElementById('vendorUnit_'+itemId);
-  if(el) el.textContent=`${item.vendor} · ${item.unit}`;
+  if(el)el.textContent=`${item.vendor} · ${item.unit}`;
   document.getElementById('inlineEdit_'+itemId).classList.remove('show');
 }
 
-// ── 번역 ──
-async function translateItem(catId,itemId){
-  const item=state.categories.find(c=>c.id===catId)?.items.find(i=>i.id===itemId);
-  if(!item)return;
-  document.getElementById('translateModal').classList.add('show');
-  document.getElementById('translateStatus').textContent=`"${item.name}" 번역 중...`;
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:200,messages:[{role:'user',content:`식당 식자재 품목명 "${item.name}"을 영어와 네팔어로 번역해줘. JSON만 반환해: {"en":"영어번역","ne":"नेपाली번역"}`}]})});
-    const data=await res.json();
-    const text=data.content[0].text;
-    const clean=text.replace(/```json|```/g,'').trim();
-    const parsed=JSON.parse(clean);
-    item.translations=parsed;save();
-    const trEl=document.getElementById('tr_'+itemId);
-    if(trEl) trEl.textContent=[parsed.en,parsed.ne].filter(Boolean).join(' / ');
-  }catch(e){alert('번역 실패: '+e.message);}
-  document.getElementById('translateModal').classList.remove('show');
-}
-
-// ── 카테고리 이동 ──
+// ── 카테고리/섹션 이동 ──
 function openMoveCat(catId,itemId){
   pendingMoveCat={catId,itemId};
   const item=state.categories.find(c=>c.id===catId)?.items.find(i=>i.id===itemId);
@@ -843,8 +779,6 @@ function confirmMoveCat(toCatId){
   toCat.items.push(item);
   saveNow();closeModal('moveCatModal');rerenderCurrentTab(catId);
 }
-
-// ── 섹션 이동 ──
 function openMoveSection(catId,itemId){
   pendingMoveSection={catId,itemId};
   const item=state.categories.find(c=>c.id===catId)?.items.find(i=>i.id===itemId);
@@ -853,14 +787,14 @@ function openMoveSection(catId,itemId){
   document.getElementById('moveSectionModal').classList.add('show');
 }
 function confirmMoveSection(zoneId){
-  const {itemId}=pendingMoveSection;
+  const{itemId}=pendingMoveSection;
   INGREDIENT_ZONES.forEach(z=>{const idx=z.items.indexOf(itemId);if(idx!==-1)z.items.splice(idx,1);});
   const zone=INGREDIENT_ZONES.find(z=>z.id===zoneId);
   if(zone)zone.items.push(itemId);
   saveNow();closeModal('moveSectionModal');rerenderCurrentTab('ingredient');
 }
 
-// ── 탭/기타 ──
+// ── 탭/스테퍼 ──
 function switchTab(catId){
   activeCat=catId;renderTabs();
   document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
@@ -869,13 +803,37 @@ function switchTab(catId){
   document.getElementById('bottomBar').style.display=catId==='settings'?'none':'flex';
 }
 
+// ✅ 4번: 수량 직접 입력
+function setQtyDirect(catId,itemId,val){
+  const item=state.categories.find(c=>c.id===catId)?.items.find(i=>i.id===itemId);
+  if(!item)return;
+  const n=Math.max(0,parseInt(val)||0);
+  item.qty=n;item.manualQty=n>0;save();
+  updateQtyDisplay(itemId,n,item.autoOrder);
+  updateOrderBtn();
+}
+
 function stepQty(catId,itemId,delta){
   const item=state.categories.find(c=>c.id===catId)?.items.find(i=>i.id===itemId);
   if(!item)return;
   item.qty=Math.max(0,(item.qty||0)+delta);item.manualQty=item.qty>0;save();
-  const el=document.getElementById('val_'+itemId);
-  if(el){el.textContent=item.qty;el.className=item.qty>0?(item.autoOrder?'step-val is-auto':'step-val is-manual'):'step-val';}
+  updateQtyDisplay(itemId,item.qty,item.autoOrder);
   updateOrderBtn();
+}
+
+function updateQtyDisplay(itemId,qty,isAuto){
+  const el=document.getElementById('val_'+itemId);
+  if(!el)return;
+  el.value=qty;
+  if(qty>0){
+    el.style.border=isAuto?'1.5px solid #3b82f6':'1.5px solid #16a34a';
+    el.style.background=isAuto?'#eff6ff':'#f0fdf4';
+    el.style.color=isAuto?'#3b82f6':'#16a34a';
+  }else{
+    el.style.border='1.5px dashed #e0e0e0';
+    el.style.background='transparent';
+    el.style.color='#bbb';
+  }
 }
 
 function moveItem(catId,itemId,dir){
@@ -885,29 +843,25 @@ function moveItem(catId,itemId,dir){
   [cat.items[idx],cat.items[ni]]=[cat.items[ni],cat.items[idx]];
   saveNow();rerenderCurrentTab(catId);
 }
-
 function toggleAutoOrder(catId,itemId){
   const item=state.categories.find(c=>c.id===catId)?.items.find(i=>i.id===itemId);
   if(!item)return;item.autoOrder=!item.autoOrder;save();rerenderCurrentTab(catId);
 }
-
 function toggleInactive(catId,itemId,inactive){
   const item=state.categories.find(c=>c.id===catId)?.items.find(i=>i.id===itemId);
   if(item){item.inactive=inactive;save();rerenderCurrentTab(catId);}
 }
-
 function toggleInactiveSection(catId){
   const cat=state.categories.find(c=>c.id===catId);if(!cat)return;
   cat.inactiveOpen=!cat.inactiveOpen;save();
   document.getElementById('inactiveGrid_'+catId)?.classList.toggle('open',cat.inactiveOpen);
   document.getElementById('inactiveChevron_'+catId)?.classList.toggle('open',cat.inactiveOpen);
 }
-
 function toggleCardMenu(e,menuId){e.stopPropagation();closeAllMenus();document.getElementById(menuId)?.classList.toggle('show');}
 function closeAllMenus(){document.querySelectorAll('.card-menu-popup,.inline-edit-popup').forEach(m=>m.classList.remove('show'));}
 document.addEventListener('click',closeAllMenus);
 
-// ── 품목 추가 모달 ──
+// ── 품목 추가 ──
 function openAddModal(catId,zoneId){
   addModalCatId=catId;addModalZoneId=zoneId;selectedUnit='개';
   const cat=state.categories.find(c=>c.id===catId);
@@ -957,7 +911,7 @@ function renderSettingsHTML(){
         </div>
       </div>
       <div class="vendor-edit-form" id="vendorForm_${i}">
-        <div class="vendor-field"><label>업체명</label><input id="vName_${i}" value="${v.name}" placeholder="업체명" onkeydown="if(event.key==='Enter')saveVendor(${i})"></div>
+        <div class="vendor-field"><label>업체명</label><input id="vName_${i}" value="${v.name}" placeholder="업체명"></div>
         <div class="vendor-field"><label>연락처</label><input id="vContact_${i}" value="${v.contact||''}" placeholder="010-0000-0000"></div>
         <div class="vendor-field"><label>링크</label><input id="vLink_${i}" value="${v.link||''}" placeholder="https://..."></div>
         <div class="vendor-field"><label>아이디</label><input id="vVid_${i}" value="${v.vid||''}" placeholder="아이디"></div>
@@ -968,15 +922,14 @@ function renderSettingsHTML(){
     </div>`).join('');
   return `
     <div class="sop-block"><h3>📋 앱 사용법 (SOP)</h3>
-      <div class="sop-step"><div class="sop-num">1</div><div class="sop-text"><strong>수산/식자재 탭</strong> → 오늘 필요한 품목 수량 입력 (+/- 버튼)</div></div>
+      <div class="sop-step"><div class="sop-num">1</div><div class="sop-text"><strong>수산/식자재 탭</strong> → 오늘 필요한 품목 수량 입력 (+/- 버튼 또는 숫자 직접 입력)</div></div>
       <div class="sop-step"><div class="sop-num">2</div><div class="sop-text"><strong>D-표시</strong> 확인 · 빨간=오늘 발주 필요, 노란=D-1~3, 초록=여유</div></div>
       <div class="sop-step"><div class="sop-num">3</div><div class="sop-text">주류/포장재 필요시 해당 탭 열어서 추가 입력</div></div>
       <div class="sop-step"><div class="sop-num">4</div><div class="sop-text">하단 <strong>발주 확정 →</strong> 버튼 클릭</div></div>
       <div class="sop-step"><div class="sop-num">5</div><div class="sop-text">업체별 발주 내용 확인 후 <strong>문자 발송</strong> 클릭</div></div>
       <div class="sop-step"><div class="sop-num">6</div><div class="sop-text">수신된 문자를 각 업체 <strong>카톡방에 복붙</strong></div></div>
-      <div class="sop-step"><div class="sop-num">7</div><div class="sop-text">품목 추가/수정: 카드 클릭(이름), 업체·단위 텍스트 클릭(드롭다운)</div></div>
-      <div class="sop-step"><div class="sop-num">8</div><div class="sop-text">품목 이동/삭제: 카드 우하단 <strong>···</strong> 버튼</div></div>
-      <div class="sop-step"><div class="sop-num">9</div><div class="sop-text">업체 관리/마지막문구 설정: 이 설정 탭</div></div>
+      <div class="sop-step"><div class="sop-num">7</div><div class="sop-text">업체·단위 수정: 카드 하단 텍스트 클릭 → 드롭다운 선택 후 저장</div></div>
+      <div class="sop-step"><div class="sop-num">8</div><div class="sop-text">품목 이동/삭제/미사용: 카드 우하단 <strong>···</strong> 버튼</div></div>
     </div>
     <div class="settings-block"><h3>업체 관리</h3>${vendorCards}
       <div class="settings-add-row"><input class="settings-input" id="newVendorInput" placeholder="새 업체명" onkeydown="if(event.key==='Enter')addVendor()"><button class="settings-add-btn" onclick="addVendor()">+ 추가</button></div>
@@ -993,36 +946,14 @@ function saveVendor(idx){
   state.vendors[idx].suffix=document.getElementById('vSuffix_'+idx)?.value||'';
   save();document.getElementById('tab_settings').innerHTML=renderSettingsHTML();saveNow();
 }
-function askVendorDelete(idx){
-  pendingVendorDel=idx;
-  document.getElementById('vendorDeleteMsg').textContent=`"${state.vendors[idx].name}" 업체를 삭제하시겠습니까?`;
-  document.getElementById('vendorDeleteModal').classList.add('show');
-}
-function confirmVendorDelete(){
-  if(pendingVendorDel!==null){state.vendors.splice(pendingVendorDel,1);save();}
-  closeModal('vendorDeleteModal');document.getElementById('tab_settings').innerHTML=renderSettingsHTML();
-}
-function askSmsToggle(idx){
-  pendingSmsToggle.idx=idx;
-  const v=state.vendors[idx];
-  document.getElementById('smsConfirmMsg').textContent=`"${v.name}" 업체의 문자 발송을 ${v.sms?'OFF':'ON'} 으로 변경하시겠습니까?`;
-  document.getElementById('smsConfirmModal').classList.add('show');
-}
-function confirmSmsToggle(){
-  const idx=pendingSmsToggle.idx;
-  if(idx!==null){state.vendors[idx].sms=!state.vendors[idx].sms;save();}
-  closeModal('smsConfirmModal');document.getElementById('tab_settings').innerHTML=renderSettingsHTML();
-}
-function addVendor(){
-  const input=document.getElementById('newVendorInput');
-  if(!input?.value.trim())return;
-  state.vendors.push({name:input.value.trim(),sms:true,contact:'',link:'',vid:'',pw:'',suffix:''});
-  input.value='';save();document.getElementById('tab_settings').innerHTML=renderSettingsHTML();
-}
+function askVendorDelete(idx){pendingVendorDel=idx;document.getElementById('vendorDeleteMsg').textContent=`"${state.vendors[idx].name}" 업체를 삭제하시겠습니까?`;document.getElementById('vendorDeleteModal').classList.add('show');}
+function confirmVendorDelete(){if(pendingVendorDel!==null){state.vendors.splice(pendingVendorDel,1);save();}closeModal('vendorDeleteModal');document.getElementById('tab_settings').innerHTML=renderSettingsHTML();}
+function askSmsToggle(idx){pendingSmsToggle.idx=idx;const v=state.vendors[idx];document.getElementById('smsConfirmMsg').textContent=`"${v.name}" 업체의 문자 발송을 ${v.sms?'OFF':'ON'} 으로 변경하시겠습니까?`;document.getElementById('smsConfirmModal').classList.add('show');}
+function confirmSmsToggle(){const idx=pendingSmsToggle.idx;if(idx!==null){state.vendors[idx].sms=!state.vendors[idx].sms;save();}closeModal('smsConfirmModal');document.getElementById('tab_settings').innerHTML=renderSettingsHTML();}
+function addVendor(){const input=document.getElementById('newVendorInput');if(!input?.value.trim())return;state.vendors.push({name:input.value.trim(),sms:true,contact:'',link:'',vid:'',pw:'',suffix:''});input.value='';save();document.getElementById('tab_settings').innerHTML=renderSettingsHTML();}
 
 function updateOrderBtn(){
-  let cnt=0;
-  state.categories.forEach(cat=>cat.items.forEach(item=>{if(item.qty>0)cnt++;}));
+  let cnt=0;state.categories.forEach(cat=>cat.items.forEach(item=>{if(item.qty>0)cnt++;}));
   const btn=document.getElementById('orderBtn');
   btn.textContent=cnt>0?`발주 확정 (${cnt}개) →`:'발주 확정 →';
   btn.className='btn-order'+(cnt>0?' ready':'');
@@ -1039,14 +970,11 @@ function handleSearch(query){
     if(match&&!first)first={catId:cat.id,itemId:item.id};
   });});
   if(first&&activeCat!==first.catId){switchTab(first.catId);renderTabs();setTimeout(()=>document.getElementById('card_'+first.itemId)?.scrollIntoView({behavior:'smooth',block:'center'}),150);}
-  else if(first){document.getElementById('card_'+first.itemId)?.scrollIntoView({behavior:'smooth',block:'center'});}
+  else if(first)document.getElementById('card_'+first.itemId)?.scrollIntoView({behavior:'smooth',block:'center'});
 }
-function clearSearch(){
-  document.getElementById('searchInput').value='';
-  document.getElementById('searchClear').style.display='none';
-  document.querySelectorAll('.item-card').forEach(c=>c.classList.remove('highlighted'));
-}
+function clearSearch(){document.getElementById('searchInput').value='';document.getElementById('searchClear').style.display='none';document.querySelectorAll('.item-card').forEach(c=>c.classList.remove('highlighted'));}
 
+// ✅ 2번: 마지막문구 포함해서 발주 모달 표시 및 전송
 function openOrderModal(){
   const groups={};
   state.categories.forEach(cat=>{cat.items.forEach(item=>{if(item.qty<=0)return;if(!groups[item.vendor])groups[item.vendor]=[];groups[item.vendor].push(item);});});
@@ -1054,7 +982,7 @@ function openOrderModal(){
   const preview=Object.keys(groups).map(vendor=>{
     const v=state.vendors.find(v=>v.name===vendor);
     const tag=v?.sms?'<span class="tag-sms">문자 발송</span>':'<span class="tag-nosms">문자 제외</span>';
-    const suffix=v?.suffix?`<div class="order-vendor-suffix">마지막 문구: ${v.suffix}</div>`:'';
+    const suffix=v?.suffix?`<div class="order-vendor-suffix">📝 마지막 문구: ${v.suffix}</div>`:'';
     const items=groups[vendor].map(i=>`<div class="order-item-line">${i.name} ${i.qty}${i.unit}</div>`).join('');
     return `<div class="order-preview-block"><div class="order-vendor-name">${vendor} ${tag}</div>${suffix}${items}</div>`;
   }).join('');
@@ -1136,12 +1064,14 @@ function rerenderCurrentTab(catId){
 
 // ── 초기화 ──
 openImgDB();
+loadTranslations(); // ✅ 5번: 번역 시트 로드
 renderTabs();
 renderContent();
 const hasQty=state.categories.some(c=>c.items.some(i=>i.qty>0));
 if(hasQty)document.getElementById('draftBadge').classList.add('show');
 syncFromServer();
-setInterval(pollServer,30000);
+setInterval(pollServer,15000); // ✅ 6번: 15초로 단축 (수량 동기화 빠르게)
+setInterval(loadTranslations,60000); // 번역 1분마다 갱신
 </script>
 </body>
 </html>
