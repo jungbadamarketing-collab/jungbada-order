@@ -576,45 +576,69 @@ function loadState(){
 }
 
 // 서버에서 최신 데이터 불러와서 병합
+// 마지막으로 서버에서 받은 updatedAt 저장
+let lastServerTime = null;
+
+// 서버 데이터 적용 (수량은 로컬 유지)
+function applyServerData(serverData, silent){
+  const qtyMap = {};
+  state.categories.forEach(cat=>{
+    cat.items.forEach(item=>{ if(item.qty>0) qtyMap[item.id]=item.qty; });
+  });
+  const openMap = {};
+  state.categories.forEach(cat=>{ openMap[cat.id]=cat.open; });
+
+  state.categories = serverData.categories.map(cat=>({
+    ...cat,
+    open: openMap[cat.id] !== undefined ? openMap[cat.id] : cat.open,
+    items: cat.items.map(item=>({
+      ...item,
+      qty: qtyMap[item.id] || 0
+    }))
+  }));
+  state.vendors = serverData.vendors || state.vendors;
+
+  localStorage.setItem('jungbada_order_v4', JSON.stringify(state));
+  renderTabs();
+  renderContent();
+  if(!silent) showSyncNotice('🔄 다른 기기의 변경사항이 반영됐습니다');
+}
+
+// 서버 초기 로드
 async function syncFromServer(){
   try {
-    showSyncNotice('☁️ 서버에서 데이터 불러오는 중...');
     const res = await fetch(GAS_URL + '?action=loadAppData');
     const json = await res.json();
 
     if(!json.data){
       // 서버에 데이터 없음 → 현재 로컬 데이터를 서버에 저장
-      showSyncNotice('📤 서버에 초기 데이터 저장 중...');
       await saveToServer();
-      showSyncNotice('✅ 초기 동기화 완료');
+      showSyncNotice('✅ 서버 초기화 완료');
       return;
     }
 
-    // 서버 데이터로 덮어쓰기 (항상 서버 우선)
-    // 단, 오늘 입력한 수량(발주 전)은 로컬 유지
-    const serverData = json.data;
-    const qtyMap = {};
-    state.categories.forEach(cat=>{
-      cat.items.forEach(item=>{ if(item.qty>0) qtyMap[item.id]=item.qty; });
-    });
-
-    state.categories = serverData.categories.map(cat=>({
-      ...cat,
-      open: (state.categories.find(c=>c.id===cat.id)||cat).open,
-      items: cat.items.map(item=>({
-        ...item,
-        qty: qtyMap[item.id] || 0
-      }))
-    }));
-    state.vendors = serverData.vendors || state.vendors;
-
-    localStorage.setItem('jungbada_order_v4', JSON.stringify(state));
-    renderTabs();
-    renderContent();
-    showSyncNotice('✅ 동기화 완료');
+    lastServerTime = json.updatedAt || null;
+    applyServerData(json.data, true);
+    showSyncNotice('✅ 서버에서 데이터를 불러왔습니다');
   } catch(e) {
     showSyncNotice('⚠️ 서버 연결 실패 (로컬 데이터 사용 중)');
   }
+}
+
+// 30초마다 서버 변경 감지 (폴링)
+async function pollServer(){
+  try {
+    const res = await fetch(GAS_URL + '?action=loadAppData');
+    const json = await res.json();
+    if(!json.data) return;
+
+    const serverTime = json.updatedAt || null;
+    // 서버 타임스탬프가 바뀌었으면 → 다른 기기에서 변경한 것
+    if(serverTime && serverTime !== lastServerTime){
+      lastServerTime = serverTime;
+      applyServerData(json.data, false);
+    }
+  } catch(e) {}
 }
 
 function showSyncNotice(msg){
@@ -649,9 +673,10 @@ async function saveToServer(){
       body: JSON.stringify(payload)
     });
     const data = await res.json();
-    if(data.success){
-      // 서버 저장 성공 시 로컬 타임스탬프를 서버 시간으로 업데이트
-      if(data.updatedAt) localStorage.setItem('jungbada_order_v4_time', data.updatedAt);
+    if(data.success && data.updatedAt){
+      // 내가 방금 저장한 시간을 lastServerTime으로 기록
+      // → 폴링 시 내 변경을 다시 적용하지 않음
+      lastServerTime = data.updatedAt;
     }
   } catch(e) {}
 }
@@ -1421,6 +1446,8 @@ const hasQty=state.categories.some(c=>c.items.some(i=>i.qty>0));
 if(hasQty) document.getElementById('draftBadge').classList.add('show');
 // 서버에서 최신 데이터 동기화
 syncFromServer();
+// 30초마다 서버 변경 감지
+setInterval(pollServer, 30000);
 </script>
 </body>
 </html>
